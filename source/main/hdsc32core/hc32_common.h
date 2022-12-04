@@ -163,7 +163,7 @@ typedef enum en_result
 #define __WEAKDEF                       __WEAK __ATTRIBUTES
 #define __ALIGN_BEGIN                   #pragma data_alignment=4
 #elif defined (__CC_ARM)                ///< ARM Compiler
-#define __WEAKDEF                       __weak
+#define __WEAKDEF                       
 #define __ALIGN_BEGIN                   __align(4)
 #else
 #error  "unsupported compiler!!"

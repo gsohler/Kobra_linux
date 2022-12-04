@@ -49,16 +49,16 @@ typedef enum ExtIntTriggerMode {
                 changes). */
 } ExtIntTriggerMode;
 
-static inline __always_inline void nvic_globalirq_enable() {
+static inline  void nvic_globalirq_enable() {
     asm volatile("cpsie i");
 }
-static inline __always_inline void nvic_globalirq_disable() {
+static inline void nvic_globalirq_disable() {
     asm volatile("cpsid i");
 }
-static inline __always_inline void interrupts() {
+static inline void interrupts() {
     nvic_globalirq_enable();
 }
-static inline __always_inline void noInterrupts() {
+static inline void noInterrupts() {
     nvic_globalirq_disable();
 }
 void init(void);

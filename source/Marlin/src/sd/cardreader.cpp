@@ -21,7 +21,7 @@
  */
 
 #include "../inc/MarlinConfig.h"
-
+#include "../../../board/bsp_sdio.h"
 #if ENABLED(SDSUPPORT)
 
 //#define DEBUG_CARDREADER
@@ -857,8 +857,21 @@ void CardReader::selectFileByName(const char * const match) {
 }
 
 uint16_t CardReader::countFilesInWorkDir() {
+  uint8_t dummy[0x200];
+  int result;
   workDir.rewind();
-  return countItems(workDir);
+  result=countItems(workDir);
+  if(result == 0)
+  {
+    if(!sdio_read(0,dummy))
+    {
+      release();
+      safe_delay(100);
+      mount();
+      result=countItems(workDir);
+    }
+  }
+  return result;
 }
 
 /**
@@ -1219,7 +1232,7 @@ void CardReader::cdroot() {
 #endif // SDCARD_SORT_ALPHA
 
 uint16_t CardReader::get_num_Files() {
-  if (!isMounted()) return 0;
+/*   if (!isMounted()) return 0; */
   return (
     #if ALL(SDCARD_SORT_ALPHA, SDSORT_USES_RAM, SDSORT_CACHE_NAMES)
       nrFiles // no need to access the SD card for filenames

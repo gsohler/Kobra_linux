@@ -11,7 +11,7 @@
 #endif
 
 //#include <Stream.h>
-#include <SPI.h>
+#include <spi.h>
 
 #define SW_CAPABLE_PLATFORM true
 
