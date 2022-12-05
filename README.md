@@ -1,0 +1,3 @@
+The resulting firmware does *NOT* run yet,
+i am depending on help from outside ...
+in my printer reverting back to the original firmware was no issue, though.
