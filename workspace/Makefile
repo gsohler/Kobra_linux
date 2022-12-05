@@ -1,4 +1,4 @@
-PROJECT=kobra
+PROJECT=firmware
 INCS = \
         -I../CMSIS_5/CMSIS/Core/Include \
 	-I../source/compoment/adc \
@@ -445,7 +445,7 @@ CC=arm-none-eabi-gcc
 LD=arm-none-eabi-gcc
 CPPC=arm-none-eabi-g++
 
-all:	${OBJDIR}/$(PROJECT).elf
+all:	${OBJDIR}/$(PROJECT).bin
 
 $(COBJECTS) : $(OBJDIR)/%.o : %.c
 ifeq ($(verbose),1)
@@ -467,6 +467,9 @@ endif
 
 $(OBJDIR)/$(PROJECT).elf:$(OBJECTS) $(LDSCRIPT)
 	$(LD) $(OBJECTS) $(LDFLAGS) -o $(OBJDIR)/$(PROJECT).elf
+
+%.bin: %.elf
+	arm-none-eabi-objcopy -O binary  $< $@
 
 clean:
 	rm -rf obj/*
