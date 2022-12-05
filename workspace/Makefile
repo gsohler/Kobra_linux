@@ -1,3 +1,4 @@
+PROJECT=kobra
 INCS = \
         -I../CMSIS_5/CMSIS/Core/Include \
 	-I../source/compoment/adc \
@@ -417,9 +418,18 @@ CPPSOURCES=	\
 
 #	../source/Marlin/src/module/servo.cpp \
 
-CFLAGS=-mcpu=cortex-m7 -mtune=cortex-m7 -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
+MCU=cortex-m7
+CFLAGS=-mcpu=$(MCU) -mtune=cortex-m7 -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
 
-CPPFLAGS=-mcpu=cortex-m7 -mtune=cortex-m7 -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
+CPPFLAGS=-mcpu=$(MCU) -mtune=cortex-m7 -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
+
+LLIBDIR=
+RULESPATH=
+LDSCRIPT=../hc32f46x.ld
+LDOPT=
+LDFLAGS=-mcpu=$(MCU) -mthumb -Og -ggdb -fomit-frame-pointer -falign-functions=16 -flto=auto -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16 -nostartfiles -Wl,-Map=$(OBJDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--library-path=/home/gsohler/git/,--script=$(LDSCRIPT),--gc-sections,--defsym=__process_stack_size__=0x400,--defsym=__main_stack_size__=0x400
+
+LIBS=
 
 OBJDIR=./obj
 
@@ -432,9 +442,10 @@ CPPOBJECTS  := $(addprefix $(OBJDIR)/, $(notdir $(CPPSOURCES:.cpp=.o)))
 OBJECTS = $(COBJECTS) $(CPPOBJECTS)
 
 CC=arm-none-eabi-gcc
+LD=arm-none-eabi-gcc
 CPPC=arm-none-eabi-g++
 
-all:	${OBJECTS}
+all:	${OBJDIR}/$(PROJECT).elf
 
 $(COBJECTS) : $(OBJDIR)/%.o : %.c
 ifeq ($(verbose),1)
@@ -454,6 +465,8 @@ else
 	@$(CPPC) -c $(CPPFLAGS) $(INCS) $(DEFINES) $< -o $@
 endif
 
+$(OBJDIR)/$(PROJECT).elf:$(OBJECTS) $(LDSCRIPT)
+	$(LD) $(OBJECTS) $(LDFLAGS) -o $(OBJDIR)/$(PROJECT).elf
 
 clean:
 	rm -rf obj/*
