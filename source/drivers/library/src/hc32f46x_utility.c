@@ -117,12 +117,6 @@ int _write(int fd, char *pBuffer, int size)
     return size;
 }
 #else
-extern "C" int32_t fputc(int32_t ch, FILE *f)
-{
-    DebugOutput((uint8_t)ch);
-
-    return (ch);
-}
 #endif
 
 /**

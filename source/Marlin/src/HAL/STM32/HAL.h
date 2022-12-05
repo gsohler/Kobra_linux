@@ -66,14 +66,27 @@
 #ifndef analogInputToDigitalPin
   #define analogInputToDigitalPin(p) (p)
 #endif
+inline void __enable_irq(void)
+{
+  __asm volatile ("cpsie i");
+}
+
+inline unsigned long __disable_irq(void)
+{
+  unsigned long result;
+  __asm volatile ("mrs %0, primask" : "=r" (result));
+  __asm volatile ("cpsid i");
+  return(result & 1);
+}
+
 
 #define CRITICAL_SECTION_START()  NOOP//uint32_t primask = __get_PRIMASK(); __disable_irq()
 #define CRITICAL_SECTION_END()    NOOP//if (!primask) __enable_irq()
 #define ISRS_ENABLED() NOOP//(!__get_PRIMASK())
-#define ENABLE_ISRS()  __enable_irq()
-#define DISABLE_ISRS() __disable_irq()
-#define cli() __disable_irq()
-#define sei() __enable_irq()
+#define ENABLE_ISRS  __enable_irq
+#define DISABLE_ISRS __disable_irq
+#define cli __disable_irq
+#define sei __enable_irq
 
 // On AVR this is in math.h?
 #define square(x) ((x)*(x))

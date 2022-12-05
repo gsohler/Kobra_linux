@@ -358,7 +358,6 @@ void PWC_EnterPowerDownMd(void)
     M4_SYSREG->PWR_PWRC0_f.PWDN = 1u;
     for(uint8_t i = 0u; i < 10u; i++)
     {
-        __NOP();
     }
     __enable_irq();
 
@@ -1675,11 +1674,6 @@ static void PWC_enClockBackup(void)
         if(0u != u8MrcState)
         {
             bM4_SYSREG_CMU_MRCCR_MRCSTP = 0u;
-            __NOP();
-            __NOP();
-            __NOP();
-            __NOP();
-            __NOP();
         }
         PWC_SetSysClk(1u);
     }

@@ -251,7 +251,6 @@ static void AsyncDelay(M4_TMR0_TypeDef* pstcTim0Reg, en_tim0_channel_t enCh,
     {
         for(uint32_t i=0ul; i<SystemCoreClock/10000ul; i++)
         {
-            __NOP();
         }
     }
 }

@@ -33,7 +33,7 @@
 #include "../stepper.h"
 
 #include "HardwareSerial.h"
-#include "SPI.h"
+#include "spi.h"
 #include "../pins/pins.h"
 
 enum StealthIndex : uint8_t { STEALTH_AXIS_XY, STEALTH_AXIS_Z, STEALTH_AXIS_E };

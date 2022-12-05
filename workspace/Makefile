@@ -108,6 +108,56 @@ DEFINES= -D__LONGLONG="long long" \
 	-DRAMSTART=0x1fff8000 \
 	-DRAMEND=0x1fffffff
 
+CSOURCES=	\
+	../source/drivers/library/src/hc32f46x_adc.c \
+	../source/drivers/library/src/hc32f46x_aes.c \
+	../source/drivers/library/src/hc32f46x_can.c \
+	../source/drivers/library/src/hc32f46x_clk.c \
+	../source/drivers/library/src/hc32f46x_cmp.c \
+	../source/drivers/library/src/hc32f46x_crc.c \
+	../source/drivers/library/src/hc32f46x_dcu.c \
+	../source/drivers/library/src/hc32f46x_dmac.c \
+	../source/drivers/library/src/hc32f46x_efm.c \
+	../source/drivers/library/src/hc32f46x_emb.c \
+	../source/drivers/library/src/hc32f46x_event_port.c \
+	../source/drivers/library/src/hc32f46x_exint_nmi_swi.c \
+	../source/drivers/library/src/hc32f46x_gpio.c \
+	../source/drivers/library/src/hc32f46x_hash.c \
+	../source/drivers/library/src/hc32f46x_i2c.c \
+	../source/drivers/library/src/hc32f46x_i2s.c \
+	../source/drivers/library/src/hc32f46x_icg.c \
+	../source/drivers/library/src/hc32f46x_interrupts.c \
+	../source/drivers/library/src/hc32f46x_keyscan.c \
+	../source/drivers/library/src/hc32f46x_mpu.c \
+	../source/drivers/library/src/hc32f46x_ots.c \
+	../source/drivers/library/src/hc32f46x_pwc.c \
+	../source/drivers/library/src/hc32f46x_qspi.c \
+	../source/drivers/library/src/hc32f46x_rmu.c \
+	../source/drivers/library/src/hc32f46x_rtc.c \
+	../source/drivers/library/src/hc32f46x_sdioc.c \
+	../source/drivers/library/src/hc32f46x_spi.c \
+	../source/drivers/library/src/hc32f46x_sram.c \
+	../source/drivers/library/src/hc32f46x_swdt.c \
+	../source/drivers/library/src/hc32f46x_timer0.c \
+	../source/drivers/library/src/hc32f46x_timer4_cnt.c \
+	../source/drivers/library/src/hc32f46x_timer4_emb.c \
+	../source/drivers/library/src/hc32f46x_timer4_oco.c \
+	../source/drivers/library/src/hc32f46x_timer4_pwm.c \
+	../source/drivers/library/src/hc32f46x_timer4_sevt.c \
+	../source/drivers/library/src/hc32f46x_timer6.c \
+	../source/drivers/library/src/hc32f46x_timera.c \
+	../source/drivers/library/src/hc32f46x_trng.c \
+	../source/drivers/library/src/hc32f46x_usart.c \
+	../source/drivers/library/src/hc32f46x_wdt.c \
+	../source/drivers/library/src/hc32f46x_utility.c \
+	../source/main/hdsc32core/system_hc32f46x.c \
+	../source/FatFs/diskio.c \
+	../source/FatFs/ff.c \
+	../source/FatFs/ffsystem.c \
+	../source/FatFs/ffunicode.c \
+	../source/compoment/sdio/sd_card/src/sd_card.c \
+	../source/compoment/sdio/sd_card/src/sdmmc_cmd.c
+
 
 CPPSOURCES=	\
 	../source/app/app_fatfs_test.cpp \
@@ -349,7 +399,6 @@ CPPSOURCES=	\
 	../source/Marlin/src/module/planner.cpp \
 	../source/Marlin/src/module/printcounter.cpp \
 	../source/Marlin/src/module/probe.cpp \
-	../source/Marlin/src/module/servo.cpp \
 	../source/Marlin/src/module/settings.cpp \
 	../source/Marlin/src/module/stepper.cpp \
 	../source/Marlin/src/module/stepper/indirection.cpp \
@@ -362,23 +411,39 @@ CPPSOURCES=	\
 	../source/Marlin/src/sd/SdFatUtil.cpp \
 	../source/Marlin/src/sd/SdFile.cpp \
 	../source/Marlin/src/sd/SdVolume.cpp \
+	../source/drivers/board/board_gpio.cpp \
 	../source/Marlin/src/sd/usb_flashdrive/Sd2Card_FlashDrive.cpp
 
 
-CPPFLAGS=-mcpu=cortex-m7 -mtune=cortex-m7 -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef -MD -MP
+#	../source/Marlin/src/module/servo.cpp \
+
+CFLAGS=-mcpu=cortex-m7 -mtune=cortex-m7 -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
+
+CPPFLAGS=-mcpu=cortex-m7 -mtune=cortex-m7 -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
 
 OBJDIR=./obj
 
 ALLSOURCES      := $(CSOURCES) $(CPPSOURCES)
 VPATH  := $(sort  $(dir $(ALLSOURCES)))
 
+COBJECTS    := $(addprefix $(OBJDIR)/, $(notdir $(CSOURCES:.c=.o)))
 CPPOBJECTS  := $(addprefix $(OBJDIR)/, $(notdir $(CPPSOURCES:.cpp=.o)))
 
-OBJECTS = $(CPPOBJECTS)
+OBJECTS = $(COBJECTS) $(CPPOBJECTS)
 
+CC=arm-none-eabi-gcc
 CPPC=arm-none-eabi-g++
 
 all:	${OBJECTS}
+
+$(COBJECTS) : $(OBJDIR)/%.o : %.c
+ifeq ($(verbose),1)
+	@echo
+	$(CC) -c $(CFLAGS) $(INCS) $(DEFINES) $< -o $@
+else
+	@echo Compiling $(<F)
+	@$(CC) -c $(CFLAGS) $(INCS) $(DEFINES) $< -o $@
+endif
 
 $(CPPOBJECTS) : $(OBJDIR)/%.o : %.cpp
 ifeq ($(verbose),1)
@@ -395,5 +460,4 @@ clean:
 
 test:
 	echo $(CPPOBJECTS)
-
 
