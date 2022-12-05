@@ -428,7 +428,7 @@ LLIBDIR=
 RULESPATH=
 LDSCRIPT=../hc32f46x.ld
 LDOPT=
-LDFLAGS=-mcpu=$(MCU) -mthumb -Og -ggdb -fomit-frame-pointer -falign-functions=16 -flto=auto -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16 -nostartfiles -Wl,-Map=$(OBJDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--library-path=/home/gsohler/git/,--script=$(LDSCRIPT),--gc-sections,--defsym=__process_stack_size__=0x400,--defsym=__main_stack_size__=0x400
+LDFLAGS=-mcpu=$(MCU) -mthumb -Og -ggdb -fomit-frame-pointer -falign-functions=16 -flto=auto -ffunction-sections -fdata-sections -fno-common -flto -fno-use-cxa-atexit -mfloat-abi=hard -mfpu=fpv5-d16 -nostartfiles -Wl,-Map=$(OBJDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--library-path=/home/gsohler/git/,--script=$(LDSCRIPT),--gc-sections,--defsym=__process_stack_size__=0x400,--defsym=__main_stack_size__=0x400 -lnosys
 
 LIBS=
 
@@ -443,7 +443,7 @@ CPPOBJECTS  := $(addprefix $(OBJDIR)/, $(notdir $(CPPSOURCES:.cpp=.o)))
 OBJECTS = $(COBJECTS) $(CPPOBJECTS)
 
 CC=arm-none-eabi-gcc
-LD=arm-none-eabi-gcc
+LD=arm-none-eabi-g++
 CPPC=arm-none-eabi-g++
 
 all:	${OBJDIR}/$(PROJECT).bin
