@@ -94,6 +94,7 @@ INCS = \
 	-I../source/FatFs \
 	-I../source/framework/SoftwareSerial 
 DEFINES= -D__LONGLONG="long long" \
+	-DMICROLIB \
 	-DHC32F46x \
 	-DUSE_DEVICE_DRIVER_LIB \
 	-D__TARGET_FPU_VFP \
@@ -418,10 +419,10 @@ CPPSOURCES=	\
 
 #	../source/Marlin/src/module/servo.cpp \
 
-MCU=cortex-m7
-CFLAGS=-mcpu=$(MCU) -mtune=cortex-m7 -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
+MCU=cortex-m4
+CFLAGS=-mcpu=$(MCU) -mtune=$(MCU) -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
 
-CPPFLAGS=-mcpu=$(MCU) -mtune=cortex-m7 -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
+CPPFLAGS=-mcpu=$(MCU) -mtune=$(MCU) -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
 
 LLIBDIR=
 RULESPATH=
