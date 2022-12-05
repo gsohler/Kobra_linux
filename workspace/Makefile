@@ -1,5 +1,5 @@
 INCS = \
-        -I/home/gsohler/git/CMSIS_5/CMSIS/Core/Include \
+        -I../CMSIS_5/CMSIS/Core/Include \
 	-I../source/compoment/adc \
 	-I../source/compoment/i2c \
 	-I../source/compoment/sdio \
@@ -110,8 +110,260 @@ DEFINES= -D__LONGLONG="long long" \
 
 
 CPPSOURCES=	\
-		../source/Marlin/src/sd/cardreader.cpp \
-		../source/Marlin/src/HAL/STM32/eeprom_sdcard.cpp
+	../source/app/app_fatfs_test.cpp \
+	../source/app/app_sserial_test.cpp \
+	../source/app/app_uart.cpp \
+	../source/app/main.cpp \
+	../source/arduino/HardwareSerial.cpp \
+	../source/arduino/Print.cpp \
+	../source/arduino/Stream.cpp \
+	../source/arduino/WString.cpp \
+	../source/board/bsp_adc.cpp \
+	../source/board/bsp_flash.cpp \
+	../source/board/bsp_init.cpp \
+	../source/board/bsp_irq.cpp \
+	../source/board/bsp_ots.cpp \
+	../source/board/bsp_pwm.cpp \
+	../source/board/bsp_rmu.cpp \
+	../source/board/bsp_sdio.cpp \
+	../source/board/bsp_timer.cpp \
+	../source/board/bsp_wdt.cpp \
+	../source/drivers/board/board_adc.cpp \
+	../source/drivers/board/board_sdio.cpp \
+	../source/drivers/board/board_tim0.cpp \
+	../source/drivers/board/startup.cpp \
+	../source/framework/cores/Arduino.cpp \
+	../source/framework/cores/flash.cpp \
+	../source/framework/cores/io.cpp \
+	../source/framework/cores/iwdg.cpp \
+	../source/framework/cores/Tone.cpp \
+	../source/framework/SoftwareSerial/SoftwareSerial.cpp \
+	../source/framework/TMCStepper/source/CHOPCONF.cpp \
+	../source/framework/TMCStepper/source/COOLCONF.cpp \
+	../source/framework/TMCStepper/source/DRV_CONF.cpp \
+	../source/framework/TMCStepper/source/DRVCONF.cpp \
+	../source/framework/TMCStepper/source/DRVCTRL.cpp \
+	../source/framework/TMCStepper/source/DRV_STATUS.cpp \
+	../source/framework/TMCStepper/source/DRVSTATUS.cpp \
+	../source/framework/TMCStepper/source/ENCMODE.cpp \
+	../source/framework/TMCStepper/source/GCONF.cpp \
+	../source/framework/TMCStepper/source/IHOLD_IRUN.cpp \
+	../source/framework/TMCStepper/source/PWMCONF.cpp \
+	../source/framework/TMCStepper/source/RAMP_STAT.cpp \
+	../source/framework/TMCStepper/source/SERIAL_SWITCH.cpp \
+	../source/framework/TMCStepper/source/SGCSCONF.cpp \
+	../source/framework/TMCStepper/source/SHORT_CONF.cpp \
+	../source/framework/TMCStepper/source/SMARTEN.cpp \
+	../source/framework/TMCStepper/source/SW_MODE.cpp \
+	../source/framework/TMCStepper/source/TMC2208Stepper.cpp \
+	../source/framework/TMCStepper/source/TMC2209Stepper.cpp \
+	../source/framework/TMCStepper/source/TMCStepper.cpp \
+	../source/Marlin/src/core/serial.cpp \
+	../source/Marlin/src/core/utility.cpp \
+	../source/Marlin/src/feature/babystep.cpp \
+	../source/Marlin/src/feature/bedlevel/abl/abl.cpp \
+	../source/Marlin/src/feature/bedlevel/bedlevel.cpp \
+	../source/Marlin/src/feature/controllerfan.cpp \
+	../source/Marlin/src/feature/e_parser.cpp \
+	../source/Marlin/src/feature/fwretract.cpp \
+	../source/Marlin/src/feature/pause.cpp \
+	../source/Marlin/src/feature/powerloss.cpp \
+	../source/Marlin/src/feature/power_monitor.cpp \
+	../source/Marlin/src/feature/repeat.cpp \
+	../source/Marlin/src/feature/runout.cpp \
+	../source/Marlin/src/feature/tmc_util.cpp \
+	../source/Marlin/src/feature/z_stepper_align.cpp \
+	../source/Marlin/src/gcode/bedlevel/abl/G29.cpp \
+	../source/Marlin/src/gcode/bedlevel/abl/M421.cpp \
+	../source/Marlin/src/gcode/bedlevel/G26.cpp \
+	../source/Marlin/src/gcode/bedlevel/G35.cpp \
+	../source/Marlin/src/gcode/bedlevel/G42.cpp \
+	../source/Marlin/src/gcode/bedlevel/M420.cpp \
+	../source/Marlin/src/gcode/calibrate/G28.cpp \
+	../source/Marlin/src/gcode/calibrate/G33.cpp \
+	../source/Marlin/src/gcode/calibrate/G34.cpp \
+	../source/Marlin/src/gcode/calibrate/G34_M422.cpp \
+	../source/Marlin/src/gcode/calibrate/G425.cpp \
+	../source/Marlin/src/gcode/calibrate/G76_M192_M871.cpp \
+	../source/Marlin/src/gcode/calibrate/M100.cpp \
+	../source/Marlin/src/gcode/calibrate/M12.cpp \
+	../source/Marlin/src/gcode/calibrate/M425.cpp \
+	../source/Marlin/src/gcode/calibrate/M48.cpp \
+	../source/Marlin/src/gcode/calibrate/M665.cpp \
+	../source/Marlin/src/gcode/calibrate/M666.cpp \
+	../source/Marlin/src/gcode/calibrate/M852.cpp \
+	../source/Marlin/src/gcode/caselight/M355.cpp \
+	../source/Marlin/src/gcode/config/M200-M205.cpp \
+	../source/Marlin/src/gcode/config/M217.cpp \
+	../source/Marlin/src/gcode/config/M218.cpp \
+	../source/Marlin/src/gcode/config/M220.cpp \
+	../source/Marlin/src/gcode/config/M221.cpp \
+	../source/Marlin/src/gcode/config/M281.cpp \
+	../source/Marlin/src/gcode/config/M301.cpp \
+	../source/Marlin/src/gcode/config/M302.cpp \
+	../source/Marlin/src/gcode/config/M304.cpp \
+	../source/Marlin/src/gcode/config/M305.cpp \
+	../source/Marlin/src/gcode/config/M43.cpp \
+	../source/Marlin/src/gcode/config/M540.cpp \
+	../source/Marlin/src/gcode/config/M575.cpp \
+	../source/Marlin/src/gcode/config/M672.cpp \
+	../source/Marlin/src/gcode/config/M92.cpp \
+	../source/Marlin/src/gcode/control/M108_M112_M410.cpp \
+	../source/Marlin/src/gcode/control/M111.cpp \
+	../source/Marlin/src/gcode/control/M120_M121.cpp \
+	../source/Marlin/src/gcode/control/M17_M18_M84.cpp \
+	../source/Marlin/src/gcode/control/M211.cpp \
+	../source/Marlin/src/gcode/control/M226.cpp \
+	../source/Marlin/src/gcode/control/M280.cpp \
+	../source/Marlin/src/gcode/control/M350_M351.cpp \
+	../source/Marlin/src/gcode/control/M380_M381.cpp \
+	../source/Marlin/src/gcode/control/M3-M5.cpp \
+	../source/Marlin/src/gcode/control/M400.cpp \
+	../source/Marlin/src/gcode/control/M42.cpp \
+	../source/Marlin/src/gcode/control/M605.cpp \
+	../source/Marlin/src/gcode/control/M7-M9.cpp \
+	../source/Marlin/src/gcode/control/M80_M81.cpp \
+	../source/Marlin/src/gcode/control/M85.cpp \
+	../source/Marlin/src/gcode/control/M993_M994.cpp \
+	../source/Marlin/src/gcode/control/M997.cpp \
+	../source/Marlin/src/gcode/control/M999.cpp \
+	../source/Marlin/src/gcode/control/T.cpp \
+	../source/Marlin/src/gcode/eeprom/M500-M504.cpp \
+	../source/Marlin/src/gcode/feature/advance/M900.cpp \
+	../source/Marlin/src/gcode/feature/controllerfan/M710.cpp \
+	../source/Marlin/src/gcode/feature/digipot/M907-M910.cpp \
+	../source/Marlin/src/gcode/feature/network/M552-M554.cpp \
+	../source/Marlin/src/gcode/feature/pause/G27.cpp \
+	../source/Marlin/src/gcode/feature/pause/G60.cpp \
+	../source/Marlin/src/gcode/feature/pause/G61.cpp \
+	../source/Marlin/src/gcode/feature/pause/M125.cpp \
+	../source/Marlin/src/gcode/feature/pause/M600.cpp \
+	../source/Marlin/src/gcode/feature/pause/M603.cpp \
+	../source/Marlin/src/gcode/feature/pause/M701_M702.cpp \
+	../source/Marlin/src/gcode/feature/powerloss/M1000.cpp \
+	../source/Marlin/src/gcode/feature/powerloss/M413.cpp \
+	../source/Marlin/src/gcode/feature/power_monitor/M430.cpp \
+	../source/Marlin/src/gcode/feature/runout/M412.cpp \
+	../source/Marlin/src/gcode/feature/trinamic/M122.cpp \
+	../source/Marlin/src/gcode/feature/trinamic/M569.cpp \
+	../source/Marlin/src/gcode/feature/trinamic/M906.cpp \
+	../source/Marlin/src/gcode/feature/trinamic/M911-M914.cpp \
+	../source/Marlin/src/gcode/gcode.cpp \
+	../source/Marlin/src/gcode/gcode_d.cpp \
+	../source/Marlin/src/gcode/geometry/G17-G19.cpp \
+	../source/Marlin/src/gcode/geometry/G53-G59.cpp \
+	../source/Marlin/src/gcode/geometry/G92.cpp \
+	../source/Marlin/src/gcode/geometry/M206_M428.cpp \
+	../source/Marlin/src/gcode/host/M110.cpp \
+	../source/Marlin/src/gcode/host/M113.cpp \
+	../source/Marlin/src/gcode/host/M114.cpp \
+	../source/Marlin/src/gcode/host/M115.cpp \
+	../source/Marlin/src/gcode/host/M118.cpp \
+	../source/Marlin/src/gcode/host/M119.cpp \
+	../source/Marlin/src/gcode/host/M16.cpp \
+	../source/Marlin/src/gcode/host/M360.cpp \
+	../source/Marlin/src/gcode/host/M876.cpp \
+	../source/Marlin/src/gcode/lcd/M0_M1.cpp \
+	../source/Marlin/src/gcode/lcd/M117.cpp \
+	../source/Marlin/src/gcode/lcd/M145.cpp \
+	../source/Marlin/src/gcode/lcd/M250.cpp \
+	../source/Marlin/src/gcode/lcd/M300.cpp \
+	../source/Marlin/src/gcode/lcd/M73.cpp \
+	../source/Marlin/src/gcode/lcd/M995.cpp \
+	../source/Marlin/src/gcode/motion/G0_G1.cpp \
+	../source/Marlin/src/gcode/motion/G2_G3.cpp \
+	../source/Marlin/src/gcode/motion/G4.cpp \
+	../source/Marlin/src/gcode/motion/G5.cpp \
+	../source/Marlin/src/gcode/motion/G6.cpp \
+	../source/Marlin/src/gcode/motion/G80.cpp \
+	../source/Marlin/src/gcode/motion/M290.cpp \
+	../source/Marlin/src/gcode/parser.cpp \
+	../source/Marlin/src/gcode/probe/G30.cpp \
+	../source/Marlin/src/gcode/probe/G31_G32.cpp \
+	../source/Marlin/src/gcode/probe/G38.cpp \
+	../source/Marlin/src/gcode/probe/M401_M402.cpp \
+	../source/Marlin/src/gcode/probe/M851.cpp \
+	../source/Marlin/src/gcode/probe/M951.cpp \
+	../source/Marlin/src/gcode/queue.cpp \
+	../source/Marlin/src/gcode/scara/M360-M364.cpp \
+	../source/Marlin/src/gcode/sd/M1001.cpp \
+	../source/Marlin/src/gcode/sd/M20.cpp \
+	../source/Marlin/src/gcode/sd/M21_M22.cpp \
+	../source/Marlin/src/gcode/sd/M23.cpp \
+	../source/Marlin/src/gcode/sd/M24_M25.cpp \
+	../source/Marlin/src/gcode/sd/M26.cpp \
+	../source/Marlin/src/gcode/sd/M27.cpp \
+	../source/Marlin/src/gcode/sd/M28_M29.cpp \
+	../source/Marlin/src/gcode/sd/M30.cpp \
+	../source/Marlin/src/gcode/sd/M32.cpp \
+	../source/Marlin/src/gcode/sd/M33.cpp \
+	../source/Marlin/src/gcode/sd/M34.cpp \
+	../source/Marlin/src/gcode/sd/M524.cpp \
+	../source/Marlin/src/gcode/sd/M808.cpp \
+	../source/Marlin/src/gcode/sd/M928.cpp \
+	../source/Marlin/src/gcode/stats/M31.cpp \
+	../source/Marlin/src/gcode/stats/M75-M78.cpp \
+	../source/Marlin/src/gcode/temp/M104_M109.cpp \
+	../source/Marlin/src/gcode/temp/M105.cpp \
+	../source/Marlin/src/gcode/temp/M106_M107.cpp \
+	../source/Marlin/src/gcode/temp/M140_M190.cpp \
+	../source/Marlin/src/gcode/temp/M141_M191.cpp \
+	../source/Marlin/src/gcode/temp/M155.cpp \
+	../source/Marlin/src/gcode/temp/M303.cpp \
+	../source/Marlin/src/gcode/units/G20_G21.cpp \
+	../source/Marlin/src/gcode/units/M149.cpp \
+	../source/Marlin/src/gcode/units/M82_M83.cpp \
+	../source/Marlin/src/HAL/shared/eeprom_api.cpp \
+	../source/Marlin/src/HAL/shared/esp_wifi.cpp \
+	../source/Marlin/src/HAL/shared/HAL_spi_L6470.cpp \
+	../source/Marlin/src/HAL/shared/servo.cpp \
+	../source/Marlin/src/HAL/STM32/eeprom_flash.cpp \
+	../source/Marlin/src/HAL/STM32/eeprom_sdcard.cpp \
+	../source/Marlin/src/HAL/STM32/fastio.cpp \
+	../source/Marlin/src/HAL/STM32/HAL.cpp \
+	../source/Marlin/src/HAL/STM32/sdio.cpp \
+	../source/Marlin/src/HAL/STM32/timers.cpp \
+	../source/Marlin/src/HAL/STM32/watchdog.cpp \
+	../source/Marlin/src/lcd/extui/anycubic_chiron_lcd.cpp \
+	../source/Marlin/src/lcd/extui/anycubic_dgus_lcd.cpp \
+	../source/Marlin/src/lcd/extui/lib/anycubic_chiron/chiron_tft.cpp \
+	../source/Marlin/src/lcd/extui/lib/anycubic_chiron/FileNavigator.cpp \
+	../source/Marlin/src/lcd/extui/lib/anycubic_chiron/Tunes.cpp \
+	../source/Marlin/src/lcd/extui/lib/anycubic_dgus/dgus_FileNavigator.cpp \
+	../source/Marlin/src/lcd/extui/lib/anycubic_dgus/dgus_tft.cpp \
+	../source/Marlin/src/lcd/extui/lib/anycubic_dgus/dgus_Tunes.cpp \
+	../source/Marlin/src/lcd/extui/ui_api.cpp \
+	../source/Marlin/src/lcd/fontutils.cpp \
+	../source/Marlin/src/lcd/marlinui.cpp \
+	../source/Marlin/src/libs/buzzer.cpp \
+	../source/Marlin/src/libs/crc16.cpp \
+	../source/Marlin/src/libs/dtostrf.cpp \
+	../source/Marlin/src/libs/hex_print.cpp \
+	../source/Marlin/src/libs/nozzle.cpp \
+	../source/Marlin/src/libs/numtostr.cpp \
+	../source/Marlin/src/libs/stopwatch.cpp \
+	../source/Marlin/src/libs/vector_3.cpp \
+	../source/Marlin/src/MarlinCore.cpp \
+	../source/Marlin/src/module/endstops.cpp \
+	../source/Marlin/src/module/motion.cpp \
+	../source/Marlin/src/module/planner.cpp \
+	../source/Marlin/src/module/printcounter.cpp \
+	../source/Marlin/src/module/probe.cpp \
+	../source/Marlin/src/module/servo.cpp \
+	../source/Marlin/src/module/settings.cpp \
+	../source/Marlin/src/module/stepper.cpp \
+	../source/Marlin/src/module/stepper/indirection.cpp \
+	../source/Marlin/src/module/stepper/trinamic.cpp \
+	../source/Marlin/src/module/temperature.cpp \
+	../source/Marlin/src/module/tool_change.cpp \
+	../source/Marlin/src/sd/cardreader.cpp \
+	../source/Marlin/src/sd/Sd2Card.cpp \
+	../source/Marlin/src/sd/SdBaseFile.cpp \
+	../source/Marlin/src/sd/SdFatUtil.cpp \
+	../source/Marlin/src/sd/SdFile.cpp \
+	../source/Marlin/src/sd/SdVolume.cpp \
+	../source/Marlin/src/sd/usb_flashdrive/Sd2Card_FlashDrive.cpp
+
 
 CPPFLAGS=-mcpu=cortex-m7 -mtune=cortex-m7 -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef -MD -MP
 
@@ -126,18 +378,22 @@ OBJECTS = $(CPPOBJECTS)
 
 CPPC=arm-none-eabi-g++
 
-$(CPPOBJECTS) : $(OBJDIR)/%.o : %.cpp Makefile
-	$(CPPC) -c $(CPPFLAGS) $(INCS) $(DEFINES)  $< -o $@
+all:	${OBJECTS}
 
-all:	$(OBJECTS)
+$(CPPOBJECTS) : $(OBJDIR)/%.o : %.cpp
+ifeq ($(verbose),1)
+	@echo
+	$(CPPC) -c $(CPPFLAGS) $(INCS) $(DEFINES) $< -o $@
+else
+	@echo Compiling $(<F)
+	@$(CPPC) -c $(CPPFLAGS) $(INCS) $(DEFINES) $< -o $@
+endif
+
 
 clean:
 	rm -rf obj/*
 
 test:
 	echo $(CPPOBJECTS)
-	echo $(CPPSOURCES)
-	echo $(ASOURCES)
-	echo $(SOURCESPATHS)
 
 

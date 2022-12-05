@@ -9,7 +9,7 @@
 
 #include "diskio.h"
 
-#include "marlincore.h"
+#include "MarlinCore.h"
 
 
 #define APP_START_ADDRESS   0x8000u
@@ -21,7 +21,7 @@ void soft_delay_ms(uint32_t ms)
         for(uint32_t j=0; j<8192; j++) {
 
 #if   defined ( __CC_ARM )
-            __nop();
+        	asm("NOP");
 #elif defined ( __GNUC__ )
         	asm("NOP");
 #endif
@@ -36,7 +36,7 @@ void scb_init(void)
     SCB->VTOR = ((uint32_t) APP_START_ADDRESS & SCB_VTOR_TBLOFF_Msk);
 }
 
-int32_t main(void)
+int main(void)
 {
     scb_init();
 

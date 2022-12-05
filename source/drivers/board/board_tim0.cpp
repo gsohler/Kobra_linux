@@ -98,7 +98,7 @@ void delayMicroseconds(uint32_t us)
 {
     for(uint32_t i=0; i<us; i++) {
         for(uint32_t j=0; j<8; j++) {
-            __nop();
+            asm("NOP");
         }
     }
 }

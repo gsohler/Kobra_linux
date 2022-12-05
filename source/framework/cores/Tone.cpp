@@ -1,4 +1,4 @@
-#include "tone.h"
+#include "Tone.h"
 #include "timers.h"
 #include "bsp_timer.h"
 #include "bsp_pwm.h"
