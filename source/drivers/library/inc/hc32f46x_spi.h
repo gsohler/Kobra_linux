@@ -48,8 +48,8 @@
  **   - 2018-10-29  1.0  Yangjp  First version for Device Driver Library of Spi.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_SPI_H__
-#define __HC32F46X_SPI_H__
+#ifndef __HC32F46x_SPI_H__
+#define __HC32F46x_SPI_H__
 
 /*******************************************************************************
  * Include files
@@ -277,14 +277,14 @@ typedef enum en_spi_ss_valid_channel
  ******************************************************************************/
 typedef enum en_spi_clk_div
 {
-    SpiClkDiv2   = 0u,                      ///< Spi pclk1 division 2
-    SpiClkDiv4   = 1u,                      ///< Spi pclk1 division 4
-    SpiClkDiv8   = 2u,                      ///< Spi pclk1 division 8
-    SpiClkDiv16  = 3u,                      ///< Spi pclk1 division 16
-    SpiClkDiv32  = 4u,                      ///< Spi pclk1 division 32
-    SpiClkDiv64  = 5u,                      ///< Spi pclk1 division 64
-    SpiClkDiv128 = 6u,                      ///< Spi pclk1 division 128
-    SpiClkDiv256 = 7u,                      ///< Spi pclk1 division 256
+    SpiClkDiv2   = 0u,                      ///< Spi pckl1 division 2
+    SpiClkDiv4   = 1u,                      ///< Spi pckl1 division 4
+    SpiClkDiv8   = 2u,                      ///< Spi pckl1 division 8
+    SpiClkDiv16  = 3u,                      ///< Spi pckl1 division 16
+    SpiClkDiv32  = 4u,                      ///< Spi pckl1 division 32
+    SpiClkDiv64  = 5u,                      ///< Spi pckl1 division 64
+    SpiClkDiv128 = 6u,                      ///< Spi pckl1 division 128
+    SpiClkDiv256 = 7u,                      ///< Spi pckl1 division 256
 } en_spi_clk_div_t;
 
 /**
@@ -294,7 +294,7 @@ typedef enum en_spi_clk_div
 typedef enum en_spi_sck_polarity
 {
     SpiSckIdleLevelLow  = 0u,               ///< SCK is low level when SCK idle
-    SpiSckIdleLevelHigh = 1u,               ///< SCK is high level when SCK idle
+    SpiSckIdelLevelHigh = 1u,               ///< SCK is high level when SCK idle
 } en_spi_sck_polarity_t;
 
 /**
@@ -313,7 +313,7 @@ typedef enum en_spi_sck_phase
  ******************************************************************************/
 typedef enum en_spi_irq_type
 {
-    SpiIrqIdle    = 0u,                     ///< Spi idle interrupt request
+    SpiIrqIdel    = 0u,                     ///< Spi idle interrupt request
     SpiIrqReceive = 1u,                     ///< Spi receive interrupt request
     SpiIrqSend    = 2u,                     ///< Spi send interrupt request
     SpiIrqError   = 3u,                     ///< Spi error interrupt request
@@ -452,7 +452,7 @@ en_result_t SPI_ClearFlag(M4_SPI_TypeDef *SPIx, en_spi_flag_type_t enFlag);
 
 #endif /* DDL_SPI_ENABLE */
 
-#endif /* __HC32F46X_SPI_H__ */
+#endif /* __HC32F46x_SPI_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

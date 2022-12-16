@@ -48,8 +48,8 @@
  **   - 2018-10-15  1.0 Hongjh First version for Device Driver Library of DCU.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_DCU_H__
-#define __HC32F46X_DCU_H__
+#ifndef __HC32F46x_DCU_H__
+#define __HC32F46x_DCU_H__
 
 /*******************************************************************************
  * Include files
@@ -154,14 +154,6 @@ typedef enum en_dcu_int_win_mode
     DcuOutsideWinCmpInt = 3u,               ///< DCU occur interrupt when DATA0 > DATA1 or DATA0 < DATA2
 } en_dcu_int_win_mode_t;
 
-/* DCU common trigger source select */
-typedef enum en_dcu_com_trigger
-{
-    DcuComTrigger_1   = 1u,                 ///< Select common trigger 1.
-    DcuComTrigger_2   = 2u,                 ///< Select common trigger 2.
-    DcuComTrigger_1_2 = 3u,                 ///< Select common trigger 1 and 2.
-} en_dcu_com_trigger_t;
-
 /**
  *******************************************************************************
  ** \brief DCU initialization configuration
@@ -230,9 +222,6 @@ en_result_t DCU_WriteDataWord(M4_DCU_TypeDef *DCUx,
                                 uint32_t u32Data);
 en_result_t DCU_SetTriggerSrc(M4_DCU_TypeDef *DCUx,
                                 en_event_src_t enTriggerSrc);
-void DCU_ComTriggerCmd(M4_DCU_TypeDef *DCUx,
-                        en_dcu_com_trigger_t enComTrigger,
-                        en_functional_state_t enState);
 
 //@} // DcuGroup
 
@@ -242,7 +231,7 @@ void DCU_ComTriggerCmd(M4_DCU_TypeDef *DCUx,
 
 #endif /* DDL_DCU_ENABLE */
 
-#endif /* __HC32F46X_DCU_H__ */
+#endif /* __HC32F46x_DCU_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

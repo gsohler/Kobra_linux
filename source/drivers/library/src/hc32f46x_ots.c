@@ -102,7 +102,7 @@
     (((x) >= EVT_TMRA1_OVF) && ((x) <= EVT_TMRA5_CMP))              ||         \
     (((x) >= EVT_TMRA6_OVF) && ((x) <= EVT_TMRA6_CMP))              ||         \
     (((x) >= EVT_USART1_EI) && ((x) <= EVT_USART4_RTO))             ||         \
-    (((x) >= EVT_SPI1_SPRI) && ((x) <= EVT_AOS_STRG))               ||         \
+    (((x) >= EVT_SPI1_SRRI) && ((x) <= EVT_AOS_STRG))               ||         \
     (((x) >= EVT_TMR41_SCMUH) && ((x) <= EVT_TMR42_SCMWL))          ||         \
     (((x) >= EVT_TMR43_SCMUH) && ((x) <= EVT_TMR43_SCMWL))          ||         \
     (((x) >= EVT_EVENT_PORT1)  && ((x) <= EVT_EVENT_PORT4))         ||         \
@@ -111,7 +111,7 @@
     (((x) >= EVT_I2S3_TXIRQOUT)  && ((x) <= EVT_I2S3_RXIRQOUT))     ||         \
     (((x) >= EVT_I2S4_TXIRQOUT)  && ((x) <= EVT_I2S4_RXIRQOUT))     ||         \
     (((x) >= EVT_ACMP1)  && ((x) <= EVT_ACMP3))                     ||         \
-    (((x) >= EVT_I2C1_RXI) && ((x) <= EVT_I2C3_EEI))                ||         \
+    (((x) >= EVT_I2C1_RXI) && ((x) <= EVT_I2C3_EE1))                ||         \
     (((x) >= EVT_PVD_PVD1) && ((x) <= EVT_OTS))                     ||         \
     ((x)  == EVT_WDT_REFUDF)                                        ||         \
     (((x) >= EVT_ADC1_EOCA) && ((x) <= EVT_TRNG_END))               ||         \
@@ -119,11 +119,6 @@
     (((x) >= EVT_SDIOC2_DMAR) && ((x) <= EVT_SDIOC2_DMAW))          ||         \
     ((x) == EVT_MAX))
 
-/*! Parameter validity check for OTS common trigger. */
-#define IS_OTS_COM_TRIGGER(x)                                                   \
-(   ((x) == OtsComTrigger_1)                    ||                              \
-    ((x) == OtsComTrigger_2)                    ||                              \
-    ((x) == OtsComTrigger_1_2))
 
 #define EXPERIMENT_COUNT                ((uint8_t)10)
 
@@ -335,44 +330,9 @@ float32_t OTS_GetTempIT(void)
  ******************************************************************************/
 void OTS_SetTriggerSrc(en_event_src_t enEvent)
 {
-    uint32_t u32OtrTrg = M4_AOS->OTS_TRG;
-
     DDL_ASSERT(IS_OTS_TRIG_SRC_EVENT(enEvent) && (EVT_OTS != enEvent));
 
-    u32OtrTrg &= ~0x1FFul;
-    u32OtrTrg |= enEvent;
-
-    M4_AOS->OTS_TRG = u32OtrTrg;
-}
-
-/**
- *******************************************************************************
- ** \brief Enable or disable OTS common trigger.
- **
- ** \param [in] enComTrigger            OTS common trigger selection. See @ref en_ots_com_trigger_t for details.
- **
- ** \param [in] enState                 Enable or disable the specified common trigger.
- **
- ** \retval None.
- **
- ******************************************************************************/
-void OTS_ComTriggerCmd(en_ots_com_trigger_t enComTrigger, en_functional_state_t enState)
-{
-    uint32_t u32ComTrig = enComTrigger;
-
-    DDL_ASSERT(IS_OTS_COM_TRIGGER(enComTrigger));
-    DDL_ASSERT(IS_FUNCTIONAL_STATE(enState));
-
-    u32ComTrig <<= 30u;
-
-    if (enState == Enable)
-    {
-        M4_AOS->OTS_TRG |= u32ComTrig;
-    }
-    else
-    {
-        M4_AOS->OTS_TRG &= ~u32ComTrig;
-    }
+    M4_AOS->OTS_TRG = enEvent;
 }
 
  /**

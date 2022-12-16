@@ -97,9 +97,11 @@ static __IO uint32_t m_u32TickCount = 0UL;
  ******************************************************************************/
 void DebugOutput(uint8_t u8Data)
 {
-    while(Reset == M4_USART2->SR_f.TXE);
-    while(Reset == M4_USART2->SR_f.TC);
-    M4_USART2->DR = u8Data;
+    M4_USART3->DR = u8Data;
+    while (0ul == M4_USART3->SR_f.TC)
+    {
+        ;
+    }
 }
 
 /**
@@ -110,15 +112,20 @@ void DebugOutput(uint8_t u8Data)
 #if defined ( __GNUC__ ) && !defined (__CC_ARM)
 int _write(int fd, char *pBuffer, int size)
 {
-    for (int i = 0; i < size; i++)
-    {
-        DebugOutput((uint8_t)pBuffer[i]);
-    }
-    return size;
+	for (int i = 0; i < size; i++)
+	{
+		DebugOutput((uint8_t)pBuffer[i]);
+	}
+	return size;
 }
 #else
-#endif
+int fputc(int ch, FILE *f)
+{
+    DebugOutput((uint8_t)ch);
 
+    return (ch);
+}
+#endif
 /**
  *******************************************************************************
  ** \brief Set synchronous clock mode baudrate
@@ -191,6 +198,7 @@ static en_result_t SetUartBaudrate(uint32_t u32Baudrate)
     }
     return enRet;
 }
+
 
 /**
  *******************************************************************************

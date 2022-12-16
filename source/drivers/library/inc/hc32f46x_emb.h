@@ -48,8 +48,8 @@
  **   - 2018-11-24  1.0  Husj  First version for Device Driver Library of EMB.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_EMB_H__
-#define __HC32F46X_EMB_H__
+#ifndef __HC32F46x_EMB_H__
+#define __HC32F46x_EMB_H__
 
 /*******************************************************************************
  * Include files
@@ -231,7 +231,7 @@ en_result_t EMB_SwBrake(M4_EMB_TypeDef *EMBx, bool bEn);
 
 #endif /* DDL_EMB_ENABLE */
 
-#endif /* __HC32F46X_EMB_H__ */
+#endif /* __HC32F46x_EMB_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

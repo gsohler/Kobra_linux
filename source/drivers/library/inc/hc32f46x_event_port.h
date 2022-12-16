@@ -83,10 +83,10 @@ extern "C"
  ******************************************************************************/
 typedef enum en_event_port
 {
-    EventPort1 = 0,                     ///< Event port 1
-    EventPort2 = 1,                     ///< Event port 2
-    EventPort3 = 2,                     ///< Event port 3
-    EventPort4 = 3,                     ///< Event port 4
+    EventPort1 = 1,                     ///< Event port 1
+    EventPort2 = 2,                     ///< Event port 2
+    EventPort3 = 3,                     ///< Event port 3
+    EventPort4 = 4,                     ///< Event port 4
 }en_event_port_t;
 
 /**
@@ -114,18 +114,6 @@ typedef enum en_event_pin
     EventPin15 = 1u << 15,              ///< Event port Pin 15
     EventPinAll= 0xFFFF,                ///< All event pins are selected
 }en_event_pin_t;
-
-/**
- *******************************************************************************
- ** \brief  Event Port common trigger source select
- **
- ******************************************************************************/
-typedef enum en_event_port_com_trigger
-{
-    EpComTrigger_1   = 0x1,            ///< Select common trigger 1.
-    EpComTrigger_2   = 0x2,            ///< Select common trigger 2.
-    EpComTrigger_1_2 = 0x3,            ///< Select common trigger 1 and 2.
-} en_event_port_com_trigger_t;
 
 /**
  *******************************************************************************
@@ -183,9 +171,6 @@ extern en_result_t EVENTPORT_Init(en_event_port_t enEventPort,                 \
 extern en_result_t EVENTPORT_DeInit(void);
 extern en_result_t EVENTPORT_SetTriggerSrc(en_event_port_t enEventPort,        \
                                            en_event_src_t enTriggerSrc);
-void EVENTPORT_ComTriggerCmd(en_event_port_t enEventPort,                      \
-                             en_event_port_com_trigger_t enComTrigger,         \
-                             en_functional_state_t enState);
 extern uint16_t EVENTPORT_GetData(en_event_port_t enEventPort);
 extern en_flag_status_t EVENTPORT_GetBit(en_event_port_t enEventPort,          \
                                          en_event_pin_t enEventPin);

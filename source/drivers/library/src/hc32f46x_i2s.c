@@ -99,15 +99,20 @@
 (   (ClrTxErrFlag == (x))                  ||                                  \
     (ClrRxErrFlag == (x)))
 
+/*!< Parameter valid check for I2S internal clock */
+#define IS_VALID_I2S_INTER_CLKSRC(x)                                           \
+(   (I2s_clk_PCLK3 == (x))                  ||                                 \
+    (I2s_clk_MPLLP == (x))                  ||                                 \
+    (I2s_clk_MPLLQ == (x))                  ||                                 \
+    (I2s_clk_MPLLR == (x))                  ||                                 \
+    (I2s_clk_UPLLP == (x))                  ||                                 \
+    (I2s_clk_UPLLQ == (x))                  ||                                 \
+    (I2s_clk_UPLLR == (x)))
+
 /*!< Parameter valid check for I2S mode */
 #define IS_VALID_I2S_MODE(x)                                                   \
 (   (I2sMaster == (x))                      ||                                 \
     (I2sSlave == (x)))
-
-/*!< Parameter valid check for I2S full duplex mode */
-#define IS_VALID_I2S_DUPLEX_MODE(x)                                            \
-(   (I2s_HalfDuplex == (x))                 ||                                 \
-    (I2s_FullDuplex == (x)))
 
 /*!< Parameter valid check for I2S standard */
 #define IS_VALID_I2S_STANDARD(x)                                               \
@@ -328,7 +333,6 @@ en_result_t I2s_Init(M4_I2S_TypeDef* pstcI2sReg, const stc_i2s_config_t* pstcI2s
         /* Check parameters */
         DDL_ASSERT(IS_VALID_I2S_REG(pstcI2sReg));
         DDL_ASSERT(IS_VALID_I2S_MODE(pstcI2sCfg->enMode));
-        DDL_ASSERT(IS_VALID_I2S_DUPLEX_MODE(pstcI2sCfg->enFullDuplexMode));
         DDL_ASSERT(IS_VALID_I2S_STANDARD(pstcI2sCfg->enStandrad));
         DDL_ASSERT(IS_VALID_I2S_DATA_LEN(pstcI2sCfg->enDataBits));
         DDL_ASSERT(IS_VALID_I2S_CHANNEL_LEN(pstcI2sCfg->enChanelLen));
@@ -409,7 +413,7 @@ en_result_t I2s_Init(M4_I2S_TypeDef* pstcI2sReg, const stc_i2s_config_t* pstcI2s
 
         /* Config CTRL register */
         stcCTRL_Tmp.WMS = pstcI2sCfg->enMode;
-        stcCTRL_Tmp.DUPLEX = pstcI2sCfg->enFullDuplexMode;
+        stcCTRL_Tmp.DUPLEX = DUPLEX_MODE;
         if(I2sMaster == pstcI2sCfg->enMode)
         {
             stcCTRL_Tmp.CKOE = 1u;
@@ -453,6 +457,7 @@ en_result_t I2s_DeInit(M4_I2S_TypeDef* pstcI2sReg)
 
     return Ok;
 }
+
 
 //@} // I2sGroup
 

@@ -423,11 +423,13 @@ CPPSOURCES=	\
 
 MCU=cortex-m4
 
-ASFLAGS=-mcpu=$(MCU) -mtune=$(MCU) -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
+COMMON_FLAGS=-mcpu=cortex-m4 -mthumb -mthumb-interwork -ffunction-sections -fdata-sections -g -fno-common -fmessage-length=0 -specs=nosys.specs -specs=nano.specs
 
-CFLAGS=-mcpu=$(MCU) -mtune=$(MCU) -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
+ASFLAGS=$(COMMON_FLAGS)
 
-CPPFLAGS=-mcpu=$(MCU) -mtune=$(MCU) -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
+CFLAGS=$(COMMON_FLAGS) -std=gnu99
+
+CPPFLAGS=$(COMMON_FLAGS) -std=c++11
 
 LLIBDIR=
 RULESPATH=

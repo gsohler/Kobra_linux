@@ -105,13 +105,6 @@ typedef struct stc_ots_init
     uint8_t           u8ClkFreq;        ///< OTS clock freq(MHz).
 } stc_ots_init_t;
 
-/* OTS common trigger source select */
-typedef enum en_ots_com_trigger
-{
-    OtsComTrigger_1   = 0x1,            ///< Select common trigger 1.
-    OtsComTrigger_2   = 0x2,            ///< Select common trigger 2.
-    OtsComTrigger_1_2 = 0x3,            ///< Select common trigger 1 and 2.
-} en_ots_com_trigger_t;
 
 /*******************************************************************************
  * Global variable definitions ('extern')
@@ -129,8 +122,6 @@ void OTS_StartIT(void);
 float32_t OTS_GetTempIT(void);
 
 void OTS_SetTriggerSrc(en_event_src_t enEvent);
-void OTS_ComTriggerCmd(en_ots_com_trigger_t enComTrigger, en_functional_state_t enState);
-
 en_result_t OTS_CheckSample(float32_t *pf32Temp, uint32_t u32Timeout);
 
 void OTS_ScalingExperiment(uint16_t *pu16Dr1, uint16_t *pu16Dr2,

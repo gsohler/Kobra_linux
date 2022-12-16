@@ -236,7 +236,8 @@ en_result_t USART_UART_Init(M4_USART_TypeDef *USARTx,
         DDL_ASSERT(IS_VALID_USART_SB_DETECT_MODE(pstcInitCfg->enDetectMode));
 
         /* Set default value */
-        USARTx->CR1 = (uint32_t)0x801B0000ul;
+        USARTx->CR1 = (uint32_t)0xFFFFFFF3ul;
+        USARTx->CR1 = (uint32_t)0x80000000ul;
         USARTx->CR2 = (uint32_t)0x00000000ul;
         USARTx->CR3 = (uint32_t)0x00000000ul;
         USARTx->BRR = (uint32_t)0x0000FFFFul;
@@ -274,9 +275,9 @@ en_result_t USART_UART_Init(M4_USART_TypeDef *USARTx,
         CR1_f.OVER8 = (uint32_t)(pstcInitCfg->enSampleMode);
 
         USARTx->PR_f = PR_f;
+        USARTx->CR1_f= CR1_f;
         USARTx->CR2_f= CR2_f;
         USARTx->CR3_f= CR3_f;
-        USARTx->CR1_f= CR1_f;
         enRet = Ok;
     }
 
@@ -320,7 +321,8 @@ en_result_t USART_CLKSYNC_Init(M4_USART_TypeDef *USARTx,
         DDL_ASSERT(IS_VALID_USART_HW_FLOW_MODE(pstcInitCfg->enHwFlow));
 
         /* Set default value */
-        USARTx->CR1 = (uint32_t)0x801B0000ul;
+        USARTx->CR1 = (uint32_t)0xFFFFFFF3ul;
+        USARTx->CR1 = (uint32_t)0x80000000ul;
         USARTx->CR2 = (uint32_t)0x00000000ul;
         USARTx->CR3 = (uint32_t)0x00000000ul;
         USARTx->BRR = (uint32_t)0x0000FFFFul;
@@ -335,9 +337,9 @@ en_result_t USART_CLKSYNC_Init(M4_USART_TypeDef *USARTx,
         CR3_f.CTSE = (uint32_t)(pstcInitCfg->enHwFlow);
 
         USARTx->PR_f = PR_f;
+        USARTx->CR1_f= CR1_f;
         USARTx->CR2_f= CR2_f;
         USARTx->CR3_f= CR3_f;
-        USARTx->CR1_f= CR1_f;
         enRet = Ok;
     }
 
@@ -381,7 +383,8 @@ en_result_t USART_SC_Init(M4_USART_TypeDef *USARTx,
         DDL_ASSERT(IS_VALID_USART_DATA_DIR(pstcInitCfg->enDirection));
 
         /* Set default value */
-        USARTx->CR1 = (uint32_t)0x801B0000ul;
+        USARTx->CR1 = (uint32_t)0xFFFFFFF3ul;
+        USARTx->CR1 = (uint32_t)0x80000000ul;
         USARTx->CR2 = (uint32_t)0x00000000ul;
         USARTx->CR3 = (uint32_t)0x00000000ul;
         USARTx->BRR = (uint32_t)0x0000FFFFul;
@@ -395,9 +398,9 @@ en_result_t USART_SC_Init(M4_USART_TypeDef *USARTx,
         PR_f.PSC = (uint32_t)(pstcInitCfg->enClkDiv);
 
         USARTx->PR_f = PR_f;
+        USARTx->CR1_f= CR1_f;
         USARTx->CR2_f= CR2_f;
         USARTx->CR3_f= CR3_f;
-        USARTx->CR1_f= CR1_f;
         enRet = Ok;
     }
 
@@ -426,7 +429,8 @@ en_result_t USART_DeInit(M4_USART_TypeDef *USARTx)
     if (IS_VALID_USART(USARTx))
     {
         /* Set default value */
-        USARTx->CR1 = (uint32_t)0x801B0000ul;
+        USARTx->CR1 = (uint32_t)0xFFFFFFF3ul;
+        USARTx->CR1 = (uint32_t)0x80000000ul;
         USARTx->CR2 = (uint32_t)0x00000000ul;
         USARTx->CR3 = (uint32_t)0x00000000ul;
         USARTx->BRR = (uint32_t)0x0000FFFFul;
@@ -558,7 +562,7 @@ en_result_t USART_FuncCmd(M4_USART_TypeDef *USARTx,
                                 en_functional_state_t enCmd)
 {
     uint32_t u32Addr;
-    stc_usart_cr1_field_t CR1_f;
+    __IO stc_usart_cr1_field_t CR1_f;
     en_result_t enRet = ErrorInvalidParameter;
 
     /* Check USARTx pointer */
@@ -1354,8 +1358,6 @@ en_result_t USART_SendData(M4_USART_TypeDef *USARTx, uint16_t u16Data)
     /* Check USARTx pointer */
     DDL_ASSERT(IS_VALID_USART(USARTx));
 
-    while(Reset == (USARTx->SR & UsartTxComplete));
-    while(Reset == (USARTx->SR & UsartTxEmpty));
     USARTx->DR_f.TDR = (uint32_t)u16Data;
 
     return Ok;

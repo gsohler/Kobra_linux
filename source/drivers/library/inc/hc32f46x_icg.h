@@ -48,8 +48,8 @@
  **   - 2018-10-15  1.0  yangjp First version for Device Driver Library of ICG.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_ICG_H__
-#define __HC32F46X_ICG_H__
+#ifndef __HC32F46x_ICG_H__
+#define __HC32F46x_ICG_H__
 
 /*******************************************************************************
  * Include files
@@ -424,7 +424,7 @@ extern "C"
 
 #endif /* DDL_ICG_ENABLE */
 
-#endif /* __HC32F46X_ICG_H__ */
+#endif /* __HC32F46x_ICG_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

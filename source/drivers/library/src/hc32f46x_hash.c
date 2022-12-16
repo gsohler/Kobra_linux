@@ -150,10 +150,10 @@ en_result_t HASH_Start(const uint8_t *pu8SrcData,
 {
     en_result_t   enRet = ErrorInvalidParameter;
     uint8_t       u8FillBuffer[HASH_GROUP_LEN];
+    uint8_t       u8FillCount   = 0u;
     uint8_t       u8FirstGroup  = 0u;
-    uint8_t       u8HashEnd     = 0u;
-    uint8_t       u8DataEndMark = 0u;
-    uint32_t      u32Index      = 0u;
+    uint32_t      u32GroupCount = 0u;
+    uint32_t      u32Index;
     uint32_t      u32BitLenHi;
     uint32_t      u32BitLenLo;
     uint32_t      u32HashTimeout;
@@ -169,50 +169,54 @@ en_result_t HASH_Start(const uint8_t *pu8SrcData,
         u32BitLenHi    = (u32SrcDataSize >> 29u) & 0x7u;
         u32BitLenLo    = (u32SrcDataSize << 3u);
 
-        while (1u)
+        while (0u != u32SrcDataSize)
         {
             /* Stop hash calculating. */
             bM4_HASH_CR_START = 0u;
 
+            u32Index = u32GroupCount * HASH_GROUP_LEN;
             if (u32SrcDataSize >= HASH_GROUP_LEN)
             {
                 HASH_WriteData(&pu8SrcData[u32Index]);
+                u32GroupCount++;
                 u32SrcDataSize -= HASH_GROUP_LEN;
-                u32Index += HASH_GROUP_LEN;
-            }
-            else if (u32SrcDataSize >= LAST_GROUP_MAX_LEN)
-            {
-                memset(u8FillBuffer, 0, HASH_GROUP_LEN);
-                memcpy(u8FillBuffer, &pu8SrcData[u32Index], u32SrcDataSize);
-                u8FillBuffer[u32SrcDataSize] = 0x80u;
-                u8DataEndMark = 1u;
-                HASH_WriteData(u8FillBuffer);
-                u32SrcDataSize = 0u;
             }
             else
             {
-                u8HashEnd = 1u;
-            }
-
-            if (u8HashEnd != 0u)
-            {
                 memset(u8FillBuffer, 0, HASH_GROUP_LEN);
-                if (u32SrcDataSize > 0u)
+
+                if (u32SrcDataSize >= LAST_GROUP_MAX_LEN)
+                {
+                    if (u8FillCount == 0u)
+                    {
+                        memcpy(u8FillBuffer, &pu8SrcData[u32Index], u32SrcDataSize);
+                        u8FillBuffer[u32SrcDataSize] = 0x80u;
+                        u8FillCount = 1u;
+                    }
+                    else
+                    {
+                        u32SrcDataSize = 0u;
+                    }
+                }
+                else
                 {
                     memcpy(u8FillBuffer, &pu8SrcData[u32Index], u32SrcDataSize);
-                }
-                if (u8DataEndMark == 0u)
-                {
                     u8FillBuffer[u32SrcDataSize] = 0x80u;
+                    u32SrcDataSize = 0u;
                 }
-                u8FillBuffer[63u] = (uint8_t)(u32BitLenLo);
-                u8FillBuffer[62u] = (uint8_t)(u32BitLenLo >> 8u);
-                u8FillBuffer[61u] = (uint8_t)(u32BitLenLo >> 16u);
-                u8FillBuffer[60u] = (uint8_t)(u32BitLenLo >> 24u);
-                u8FillBuffer[59u] = (uint8_t)(u32BitLenHi);
-                u8FillBuffer[58u] = (uint8_t)(u32BitLenHi >> 8u);
-                u8FillBuffer[57u] = (uint8_t)(u32BitLenHi >> 16u);
-                u8FillBuffer[56u] = (uint8_t)(u32BitLenHi >> 24u);
+
+                if (0u == u32SrcDataSize)
+                {
+                    u8FillBuffer[63u] = (uint8_t)(u32BitLenLo);
+                    u8FillBuffer[62u] = (uint8_t)(u32BitLenLo >> 8u);
+                    u8FillBuffer[61u] = (uint8_t)(u32BitLenLo >> 16u);
+                    u8FillBuffer[60u] = (uint8_t)(u32BitLenLo >> 24u);
+                    u8FillBuffer[59u] = (uint8_t)(u32BitLenHi);
+                    u8FillBuffer[58u] = (uint8_t)(u32BitLenHi >> 8u);
+                    u8FillBuffer[57u] = (uint8_t)(u32BitLenHi >> 16u);
+                    u8FillBuffer[56u] = (uint8_t)(u32BitLenHi >> 24u);
+                }
+
                 HASH_WriteData(u8FillBuffer);
             }
 
@@ -244,7 +248,7 @@ en_result_t HASH_Start(const uint8_t *pu8SrcData,
                 u32TimeCount++;
             }
 
-            if ((ErrorTimeout == enRet) || (u8HashEnd != 0u))
+            if (ErrorTimeout == enRet)
             {
                 break;
             }

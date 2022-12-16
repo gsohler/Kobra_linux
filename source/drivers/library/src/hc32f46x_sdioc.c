@@ -100,11 +100,6 @@ typedef struct stc_sdioc_instance_data
 (   (M4_SDIOC1 == (__SDIOCx__))             ||                                 \
     (M4_SDIOC2 == (__SDIOCx__)))
 
-/*!< Parameter valid check for SDIOC mode. */
-#define IS_VALID_SDIOC_MODE(x)                                                 \
-(   (SdiocModeSD == (x))                    ||                                 \
-    (SdiocModeMMC == (x)))
-
 /*!< Parameter valid check for SDIOC Response Register. */
 #define IS_VALID_SDIOC_RESP(x)                                                 \
 (   (SdiocRegResp01 == (x))                 ||                                 \

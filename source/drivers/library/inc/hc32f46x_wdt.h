@@ -48,8 +48,8 @@
  **   - 2018-10-18  1.0  yangjp First version for Device Driver Library of WDT.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_WDT_H__
-#define __HC32F46X_WDT_H__
+#ifndef __HC32F46x_WDT_H__
+#define __HC32F46x_WDT_H__
 
 /*******************************************************************************
  * Include files
@@ -188,7 +188,7 @@ en_result_t WDT_ClearFlag(en_wdt_flag_type_t enFlag);
 
 #endif /* DDL_WDT_ENABLE */
 
-#endif /* __HC32F46X_WDT_H__ */
+#endif /* __HC32F46x_WDT_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

@@ -278,14 +278,9 @@
     (Timer6ZMask8Cyl == (x))             ||                                    \
     (Tiemr6ZMask16Cyl == (x)))
 
+
 /*!< Parameter valid check for event source */
 #define IS_VALID_EVENT_SOURCE(x)                ((x) <= 511)
-
-/*!< Parameter validity check for common trigger. */
-#define IS_VALID_TIMER6_COM_TRIGGER(x)                                         \
-(   (Timer6ComTrigger_1 == (x))          ||                                    \
-    (Timer6ComTrigger_2 == (x))          ||                                    \
-    (Timer6ComTrigger_1_2 == (x)))
 
 /*! TimerA registers reset value */
 #define TIMERA_REG_CNTER_RESET_VALUE            (0x0000u)
@@ -322,7 +317,7 @@
  * \param   [in]  bEn              true/false
  *
  * \retval  Ok:  config successfully
- *
+ * 
  ******************************************************************************/
 en_result_t Timer6_ConfigIrq(M4_TMR6_TypeDef *TMR6x, en_timer6_irq_type_t enTimer6Irq, bool bEn)
 {
@@ -495,7 +490,7 @@ en_result_t Timer6_DeInit(M4_TMR6_TypeDef *TMR6x)
  *
  * \retval  Ok:  Config Successfully
  * \retval  ErrorInvalidParameter: Provided parameter is not valid
- *
+ * 
  ******************************************************************************/
 en_result_t Timer6_Init(M4_TMR6_TypeDef *TMR6x, const stc_timer6_basecnt_cfg_t* pstcTimer6BaseCntCfg)
 {
@@ -528,7 +523,7 @@ en_result_t Timer6_Init(M4_TMR6_TypeDef *TMR6x, const stc_timer6_basecnt_cfg_t* 
  * \param   [in]  TMR6x            Timer6 unit
  *
  * \retval  Ok:  Config Successfully
- *
+ * 
  ******************************************************************************/
 en_result_t Timer6_StartCount(M4_TMR6_TypeDef *TMR6x)
 {
@@ -546,7 +541,7 @@ en_result_t Timer6_StartCount(M4_TMR6_TypeDef *TMR6x)
  * \param   [in]  TMR6x       Timer6 unit
  *
  * \retval  Ok:  Config Successfully
- *
+ * 
  ******************************************************************************/
 en_result_t Timer6_StopCount(M4_TMR6_TypeDef *TMR6x)
 {
@@ -902,7 +897,7 @@ uint16_t Timer6_GetGeneralCmpValue(M4_TMR6_TypeDef *TMR6x, en_timer6_compare_t e
  *
  * \retval  Ok:  Config successfully
  * \retval  ErrorInvalidParameter: Provided parameter is not valid
- *
+ * 
  ***********************************************************************/
 en_result_t Timer6_SetValidPeriod(M4_TMR6_TypeDef *TMR6x, const stc_timer6_validper_cfg_t* pstcTimer6ValidPerCfg)
 {
@@ -935,7 +930,7 @@ en_result_t Timer6_SetValidPeriod(M4_TMR6_TypeDef *TMR6x, const stc_timer6_valid
  *
  * \retval  Ok:  Set successfully
  * \retval  ErrorInvalidParameter: Provided parameter is not valid
- *
+ * 
  ******************************************************************************/
 en_result_t Timer6_PortInputConfig(M4_TMR6_TypeDef *TMR6x, const stc_timer6_port_input_cfg_t* pstcTimer6PortInputCfg)
 {
@@ -991,7 +986,7 @@ en_result_t Timer6_PortInputConfig(M4_TMR6_TypeDef *TMR6x, const stc_timer6_port
  *
  * \retval  Ok:  Set successfully
  * \retval  ErrorInvalidParameter: Provided parameter is not valid
- *
+ * 
  ******************************************************************************/
 en_result_t Timer6_PortOutputConfig(M4_TMR6_TypeDef *TMR6x,
                                 en_timer6_chx_port_t enTimer6PWMPort,
@@ -1051,7 +1046,7 @@ en_result_t Timer6_PortOutputConfig(M4_TMR6_TypeDef *TMR6x,
  *
  * \retval  Ok:  Set Successfully
  * \retval  ErrorInvalidParameter: Provided parameter is not valid
- *
+ * 
  ******************************************************************************/
 en_result_t Timer6_SetDeadTimeValue(M4_TMR6_TypeDef *TMR6x, en_timer6_dead_time_reg_t enTimer6DTReg, uint16_t u16DTValue)
 {
@@ -1091,7 +1086,7 @@ en_result_t Timer6_SetDeadTimeValue(M4_TMR6_TypeDef *TMR6x, en_timer6_dead_time_
  *
  * \retval  Ok:  Set Successfully
  * \retval  ErrorInvalidParameter: Provided parameter is not valid
- *
+ * 
  ******************************************************************************/
 en_result_t Timer6_ConfigDeadTime(M4_TMR6_TypeDef *TMR6x, const stc_timer6_deadtime_cfg_t* pstcTimer6DTCfg)
 {
@@ -1121,7 +1116,7 @@ en_result_t Timer6_ConfigDeadTime(M4_TMR6_TypeDef *TMR6x, const stc_timer6_deadt
  *
  * \retval  Ok:  Set successfully
  * \retval  ErrorInvalidParameter: Provided parameter is not valid
- *
+ * 
  ******************************************************************************/
 en_result_t Timer6_SwSyncStart(const stc_timer6_sw_sync_t* pstcTimer6SwSyncStart)
 {
@@ -1160,7 +1155,7 @@ en_result_t Timer6_SwSyncStart(const stc_timer6_sw_sync_t* pstcTimer6SwSyncStart
  *
  * \retval  Ok:  Set successfully
  * \retval  ErrorInvalidParameter: Provided parameter is not valid
- *
+ * 
  ******************************************************************************/
 en_result_t Timer6_SwSyncStop(const stc_timer6_sw_sync_t* pstcTimer6SwSyncStop)
 {
@@ -1199,7 +1194,7 @@ en_result_t Timer6_SwSyncStop(const stc_timer6_sw_sync_t* pstcTimer6SwSyncStop)
  *
  * \retval  Ok:  Set successfully
  * \retval  ErrorInvalidParameter: Provided parameter is not valid
- *
+ * 
  ******************************************************************************/
 en_result_t Timer6_SwSyncClear(const stc_timer6_sw_sync_t* pstcTimer6SwSyncClear)
 {
@@ -1237,8 +1232,8 @@ en_result_t Timer6_SwSyncClear(const stc_timer6_sw_sync_t* pstcTimer6SwSyncClear
  * \param   [in]  pstcTimer6SwSyncState    Software Synchrony State Pointer
  *
  * \retval  Ok:  Set successfully
- * \retval  ErrorInvalidParameter: Provided parameter is not valid
- *
+ * \retval  ErrorInvalidParameter: Provided parameter is not valid 
+ * 
  ******************************************************************************/
 en_result_t Timer6_GetSwSyncState(stc_timer6_sw_sync_t* pstcTimer6SwSyncState)
 {
@@ -1286,7 +1281,7 @@ en_result_t Timer6_GetSwSyncState(stc_timer6_sw_sync_t* pstcTimer6SwSyncState)
  * \param   [in]  enTimer6HwCntUp  Hardware UpCount Event
  *
  * \retval  Ok:  Set successfully
- *
+ * 
  ******************************************************************************/
 en_result_t Timer6_ConfigHwCntUp(M4_TMR6_TypeDef *TMR6x, en_timer6_hw_cnt_t enTimer6HwCntUp)
 {
@@ -1706,7 +1701,7 @@ en_result_t Timer6_SetTriggerSrc0(en_event_src_t enTriggerSrc)
     /* Check parameters */
     DDL_ASSERT(IS_VALID_EVENT_SOURCE(enTriggerSrc));
 
-    M4_AOS->TMR6_HTSSR1_f.TRGSEL = enTriggerSrc;
+    M4_AOS->TMR6_HTSSR1 = enTriggerSrc;
 
     return enRet;
 }
@@ -1728,63 +1723,9 @@ en_result_t Timer6_SetTriggerSrc1(en_event_src_t enTriggerSrc)
     /* Check parameters */
     DDL_ASSERT(IS_VALID_EVENT_SOURCE(enTriggerSrc));
 
-    M4_AOS->TMR6_HTSSR2_f.TRGSEL = enTriggerSrc;
+    M4_AOS->TMR6_HTSSR2 = enTriggerSrc;
 
     return enRet;
-}
-
-/**
- *******************************************************************************
- ** \brief  Enable or disable Timer6 common trigger for hardware trigger register 0
- **
- ** \param [in] enComTrigger            Timer0 common trigger selection. See @ref en_timer6_com_trigger_t for details.
- ** \param [in] enState                 Enable or disable the specified common trigger.
- **
- ** \retval None
- **
- ******************************************************************************/
-void TIMER6_ComTriggerCmd0(en_timer6_com_trigger_t enComTrigger, en_functional_state_t enState)
-{
-    uint32_t u32ComTrig = (uint32_t)enComTrigger;
-
-    DDL_ASSERT(IS_VALID_TIMER6_COM_TRIGGER(enComTrigger));
-    DDL_ASSERT(IS_FUNCTIONAL_STATE(enState));
-
-    if (enState == Enable)
-    {
-        M4_AOS->TMR6_HTSSR1 |= (u32ComTrig << 30u);
-    }
-    else
-    {
-        M4_AOS->TMR6_HTSSR1 &= ~(u32ComTrig << 30u);
-    }
-}
-
-/**
- *******************************************************************************
- ** \brief  Enable or disable Timer6 common trigger for hardware trigger register 1
- **
- ** \param [in] enComTrigger            Timer0 common trigger selection. See @ref en_timer6_com_trigger_t for details.
- ** \param [in] enState                 Enable or disable the specified common trigger.
- **
- ** \retval None
- **
- ******************************************************************************/
-void TIMER6_ComTriggerCmd1(en_timer6_com_trigger_t enComTrigger, en_functional_state_t enState)
-{
-    uint32_t u32ComTrig = (uint32_t)enComTrigger;
-
-    DDL_ASSERT(IS_VALID_TIMER6_COM_TRIGGER(enComTrigger));
-    DDL_ASSERT(IS_FUNCTIONAL_STATE(enState));
-
-    if (enState == Enable)
-    {
-        M4_AOS->TMR6_HTSSR2 |= (u32ComTrig << 30u);
-    }
-    else
-    {
-        M4_AOS->TMR6_HTSSR2 &= ~(u32ComTrig << 30u);
-    }
 }
 
 /*******************************************************************************

@@ -48,8 +48,8 @@
  **   - 2018-10-22  1.0  Pangw First version for Device Driver Library of CMP.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_CMP_H__
-#define __HC32F46X_CMP_H__
+#ifndef __HC32F46x_CMP_H__
+#define __HC32F46x_CMP_H__
 
 /*******************************************************************************
  * Include files
@@ -305,7 +305,7 @@ en_result_t CMP_ADC_SetRefVoltPath(en_cmp_adc_int_ref_volt_path_t enRefVoltPath)
 
 #endif /* DDL_CMP_ENABLE */
 
-#endif /* __HC32F46X_CMP_H__ */
+#endif /* __HC32F46x_CMP_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

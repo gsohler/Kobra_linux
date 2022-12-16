@@ -75,7 +75,7 @@
 #define EFM_KEY1                            (0x0123ul)
 #define EFM_KEY2                            (0x3210ul)
 
-#define EFM_PROTECT_ADDR_MSK                (0x000FFFFFu)
+#define EFM_PROTECT_ADDR_MSK                (0x0007FFFFu)
 
 /*  Parameter validity check for pointer. */
 #define IS_VALID_POINTER(x)                 (NULL != (x))
@@ -106,12 +106,14 @@
 
 /*  Parameter validity check for erase/program mode. */
 #define IS_VALID_ERASE_PGM_MD(MD)                                              \
-(   ((MD) == EFM_MODE_READONLY)                ||                              \
-    ((MD) == EFM_MODE_SINGLEPROGRAM)           ||                              \
-    ((MD) == EFM_MODE_SINGLEPROGRAMRB)         ||                              \
-    ((MD) == EFM_MODE_SEQUENCEPROGRAM)         ||                              \
-    ((MD) == EFM_MODE_SECTORERASE)             ||                              \
-    ((MD) == EFM_MODE_CHIPERASE))
+(   ((MD) == ReadOnly1)                         ||                             \
+    ((MD) == SingleProgram)                     ||                             \
+    ((MD) == SingleProgramRB)                   ||                             \
+    ((MD) == SequenceProgram)                   ||                             \
+    ((MD) == SectorErase)                       ||                             \
+    ((MD) == MassErase)                         ||                             \
+    ((MD) == ReadOnly2)                         ||                             \
+    ((MD) == ReadOnly3))
 
 /*  Parameter validity check for flash flag. */
 #define IS_VALID_FLASH_FLAG(flag)                                              \
@@ -120,7 +122,7 @@
     ((flag) == EFM_FLAG_PGSZERR)                ||                             \
     ((flag) == EFM_FLAG_PGMISMTCH)              ||                             \
     ((flag) == EFM_FLAG_EOP)                    ||                             \
-    ((flag) == EFM_FLAG_COLERR)                 ||                             \
+    ((flag) == EFM_FLAG_RWERR)                  ||                             \
     ((flag) == EFM_FLAG_RDY))
 
 /*  Parameter validity check for flash clear flag. */
@@ -130,13 +132,13 @@
     ((flag) == EFM_FLAG_PGSZERR)                ||                             \
     ((flag) == EFM_FLAG_PGMISMTCH)              ||                             \
     ((flag) == EFM_FLAG_EOP)                    ||                             \
-    ((flag) == EFM_FLAG_COLERR))
+    ((flag) == EFM_FLAG_RWERR))
 
 /*  Parameter validity check for flash interrupt. */
 #define IS_VALID_EFM_INT_SEL(int)                                              \
 (   ((int) == PgmErsErrInt)                     ||                             \
     ((int) == EndPgmInt)                        ||                             \
-    ((int) == ColErrInt))
+    ((int) == ReadErrInt))
 
 /*  Parameter validity check for flash address. */
 #define IS_VALID_FLASH_ADDR(addr)                                              \
@@ -336,43 +338,25 @@ void EFM_ErasePgmCmd(en_functional_state_t enNewState)
  *******************************************************************************
  ** \brief Set the flash erase program mode.
  **
- ** \param  [in] u32Mode               The flash erase program mode.
- ** \arg    EFM_MODE_READONLY           The flash read only.
- ** \arg    EFM_MODE_SINGLEPROGRAM      The flash single program.
- ** \arg    EFM_MODE_SINGLEPROGRAMRB    The flash single program with read back.
- ** \arg    EFM_MODE_SEQUENCEPROGRAM    The flash sequence program.
- ** \arg    EFM_MODE_SECTORERASE        The flash sector erase.
- ** \arg    EFM_MODE_CHIPERASE          The flash mass erase.
+ ** \param  [in] enReadMD               The flash erase program mode.
+ ** \arg    ReadOnly1                   The flash read only 1.
+ ** \arg    SingleProgram               The flash single program.
+ ** \arg    SingleProgramRB             The flash single program with read back.
+ ** \arg    SequenceProgram             The flash sequence program.
+ ** \arg    SectorErase                 The flash sector erase.
+ ** \arg    MassErase                   The flash mass erase.
+ ** \arg    ReadOnly2                   The flash read only 2.
+ ** \arg    ReadOnly3                   The flash read only 3.
  **
- ** \retval en_result_t.
+ ** \retval None.
  **
  ** \note   None
  **
  ******************************************************************************/
-en_result_t EFM_SetErasePgmMode(uint32_t u32Mode)
+void EFM_SetErasePgmMode(en_efm_erase_pgm_md_t enReadMD)
 {
-    en_result_t enRet = Ok;
-    uint16_t u16Timeout = 0u;
-
-    DDL_ASSERT(IS_VALID_ERASE_PGM_MD(u32Mode));
-
-    while(1ul != M4_EFM->FSR_f.RDY)
-    {
-        u16Timeout++;
-        if(u16Timeout > 0x1000u)
-        {
-            enRet = ErrorTimeout;
-            break;
-        }
-    }
-    if(Ok == enRet)
-    {
-        M4_EFM->FWMC_f.PEMODE = Enable;
-        M4_EFM->FWMC_f.PEMOD = u32Mode;
-        M4_EFM->FWMC_f.PEMODE = Disable;
-    }
-
-    return enRet;
+    DDL_ASSERT(IS_VALID_ERASE_PGM_MD(enReadMD));
+    M4_EFM->FWMC_f.PEMOD = enReadMD;
 }
 /**
  *******************************************************************************
@@ -405,7 +389,7 @@ void EFM_InterruptCmd(en_efm_int_sel_t enInt, en_functional_state_t enNewState)
         case EndPgmInt:
             M4_EFM->FITE_f.OPTENDITE = enNewState;
             break;
-        case ColErrInt:
+        case ReadErrInt:
             M4_EFM->FITE_f.COLERRITE = enNewState;
             break;
         default:
@@ -423,7 +407,7 @@ void EFM_InterruptCmd(en_efm_int_sel_t enInt, en_functional_state_t enNewState)
  ** \arg   EFM_FLAG_PGSZERR             Flash program size error flag.
  ** \arg   EFM_FLAG_PGMISMTCH           Flash program miss match flag.
  ** \arg   EFM_FLAG_EOP                 Flash end of program flag.
- ** \arg   EFM_FLAG_COLERR              Flash collision error flag.
+ ** \arg   EFM_FLAG_RWERR               Flash read write error flag.
  ** \arg   EFM_FLAG_RDY                 Flash ready flag.
  **
  ** \retval The flash status.
@@ -448,7 +432,7 @@ en_flag_status_t EFM_GetFlagStatus(uint32_t u32flag)
  ** \arg   EFM_FLAG_PGSZERR             Flash program size error flag.
  ** \arg   EFM_FLAG_PGMISMTCH           Flash program miss match flag.
  ** \arg   EFM_FLAG_EOP                 Flash end of program flag.
- ** \arg   EFM_FLAG_COLERR              Flash collision error flag.
+ ** \arg   EFM_FLAG_RWERR               Flash read write error flag.
  **
  ** \retval The flash status.
  **
@@ -571,7 +555,7 @@ en_result_t EFM_SingleProgram(uint32_t u32Addr, uint32_t u32Data)
 
     /* CLear the error flag. */
     EFM_ClearFlag(EFM_FLAG_WRPERR | EFM_FLAG_PEPRTERR | EFM_FLAG_PGSZERR |
-                  EFM_FLAG_PGMISMTCH | EFM_FLAG_EOP | EFM_FLAG_COLERR);
+                  EFM_FLAG_PGMISMTCH | EFM_FLAG_EOP | EFM_FLAG_RWERR);
 
     /* read back CACHE */
     u8tmp = (uint8_t)M4_EFM->FRMC_f.CACHE;
@@ -581,7 +565,7 @@ en_result_t EFM_SingleProgram(uint32_t u32Addr, uint32_t u32Data)
     /* Enable program. */
     EFM_ErasePgmCmd(Enable);
     /* Set single program mode. */
-    M4_EFM->FWMC_f.PEMOD = EFM_MODE_SINGLEPROGRAM;
+    EFM_SetErasePgmMode(SingleProgram);
     /* program data. */
     *(uint32_t*)u32Addr = u32Data;
 
@@ -590,7 +574,7 @@ en_result_t EFM_SingleProgram(uint32_t u32Addr, uint32_t u32Data)
         u16Timeout++;
         if(u16Timeout > 0x1000u)
         {
-            enRet = ErrorTimeout;
+            enRet = ErrorTimeout; 
         }
     }
 
@@ -601,7 +585,7 @@ en_result_t EFM_SingleProgram(uint32_t u32Addr, uint32_t u32Data)
 
     EFM_ClearFlag(EFM_FLAG_EOP);
     /* Set read only mode. */
-    M4_EFM->FWMC_f.PEMOD = EFM_MODE_READONLY;
+    EFM_SetErasePgmMode(ReadOnly1);
     EFM_ErasePgmCmd(Disable);
 
     /* recover CACHE */
@@ -632,7 +616,7 @@ en_result_t EFM_SingleProgramRB(uint32_t u32Addr, uint32_t u32Data)
 
     /* CLear the error flag. */
     EFM_ClearFlag(EFM_FLAG_WRPERR | EFM_FLAG_PEPRTERR | EFM_FLAG_PGSZERR |
-                  EFM_FLAG_PGMISMTCH | EFM_FLAG_EOP | EFM_FLAG_COLERR);
+                  EFM_FLAG_PGMISMTCH | EFM_FLAG_EOP | EFM_FLAG_RWERR);
 
     /* read back CACHE */
     u8tmp = (uint8_t)M4_EFM->FRMC_f.CACHE;
@@ -642,7 +626,7 @@ en_result_t EFM_SingleProgramRB(uint32_t u32Addr, uint32_t u32Data)
     /* Enable program. */
     EFM_ErasePgmCmd(Enable);
     /* Set single program with read back mode. */
-    M4_EFM->FWMC_f.PEMOD = EFM_MODE_SINGLEPROGRAMRB;
+    EFM_SetErasePgmMode(SingleProgramRB);
     /* program data. */
     *(uint32_t*)u32Addr = u32Data;
 
@@ -651,7 +635,7 @@ en_result_t EFM_SingleProgramRB(uint32_t u32Addr, uint32_t u32Data)
         u16Timeout++;
         if(u16Timeout > 0x1000u)
         {
-            enRet = ErrorTimeout;
+            enRet = ErrorTimeout; 
         }
     }
 
@@ -662,7 +646,7 @@ en_result_t EFM_SingleProgramRB(uint32_t u32Addr, uint32_t u32Data)
 
     EFM_ClearFlag(EFM_FLAG_EOP);
     /* Set read only mode. */
-    M4_EFM->FWMC_f.PEMOD = EFM_MODE_READONLY;
+    EFM_SetErasePgmMode(ReadOnly1);
     EFM_ErasePgmCmd(Disable);
 
     /* recover CACHE */
@@ -706,7 +690,7 @@ en_result_t EFM_SequenceProgram(uint32_t u32Addr, uint32_t u32Len, void *pBuf)
     uint32_t i;
     uint16_t u16Timeout = 0u;
     uint32_t u32Tmp = 0xFFFFFFFFul;
-    uint32_t *u32pSrc = (uint32_t *)pBuf;
+    uint32_t *u32pSrc = pBuf;
     uint32_t *u32pDest = (uint32_t *)u32Addr;
     uint32_t u32LoopWords = u32Len >> 2ul;
     uint32_t u32RemainBytes = u32Len % 4ul;
@@ -716,7 +700,7 @@ en_result_t EFM_SequenceProgram(uint32_t u32Addr, uint32_t u32Len, void *pBuf)
 
     /* CLear the error flag. */
     EFM_ClearFlag(EFM_FLAG_WRPERR | EFM_FLAG_PEPRTERR | EFM_FLAG_PGSZERR |
-                  EFM_FLAG_PGMISMTCH | EFM_FLAG_EOP | EFM_FLAG_COLERR);
+                  EFM_FLAG_PGMISMTCH | EFM_FLAG_EOP | EFM_FLAG_RWERR);
 
     /* read back CACHE */
     u8tmp = (uint8_t)M4_EFM->FRMC_f.CACHE;
@@ -726,9 +710,9 @@ en_result_t EFM_SequenceProgram(uint32_t u32Addr, uint32_t u32Len, void *pBuf)
     /* Enable program. */
     EFM_ErasePgmCmd(Enable);
     /* Set sequence program mode. */
-    M4_EFM->FWMC_f.PEMOD = EFM_MODE_SEQUENCEPROGRAM;
+    EFM_SetErasePgmMode(SequenceProgram);
     /* clear read collided error flag.*/
-    EFM_ClearFlag(EFM_FLAG_COLERR);
+    EFM_ClearFlag(EFM_FLAG_RWERR);
     EFM_ClearFlag(EFM_FLAG_WRPERR);
 
     /* program data. */
@@ -741,7 +725,7 @@ en_result_t EFM_SequenceProgram(uint32_t u32Addr, uint32_t u32Len, void *pBuf)
             u16Timeout++;
             if(u16Timeout > 0x1000u)
             {
-                enRet = ErrorTimeout;
+                enRet = ErrorTimeout; 
             }
         }
         /* clear end flag. */
@@ -754,7 +738,7 @@ en_result_t EFM_SequenceProgram(uint32_t u32Addr, uint32_t u32Len, void *pBuf)
     }
 
     /* Set read only mode. */
-    M4_EFM->FWMC_f.PEMOD = EFM_MODE_READONLY;
+    EFM_SetErasePgmMode(ReadOnly1);
 
     u16Timeout = 0u;
     while(1ul != M4_EFM->FSR_f.RDY)
@@ -762,7 +746,7 @@ en_result_t EFM_SequenceProgram(uint32_t u32Addr, uint32_t u32Len, void *pBuf)
         u16Timeout++;
         if(u16Timeout > 0x1000u)
         {
-            enRet = ErrorTimeout;
+            enRet = ErrorTimeout; 
         }
     }
 
@@ -796,7 +780,7 @@ en_result_t EFM_SectorErase(uint32_t u32Addr)
 
     /* CLear the error flag. */
     EFM_ClearFlag(EFM_FLAG_WRPERR | EFM_FLAG_PEPRTERR | EFM_FLAG_PGSZERR |
-                  EFM_FLAG_PGMISMTCH | EFM_FLAG_EOP | EFM_FLAG_COLERR);
+                  EFM_FLAG_PGMISMTCH | EFM_FLAG_EOP | EFM_FLAG_RWERR);
 
     /* read back CACHE */
     u8tmp = (uint8_t)M4_EFM->FRMC_f.CACHE;
@@ -806,7 +790,7 @@ en_result_t EFM_SectorErase(uint32_t u32Addr)
     /* Enable erase. */
     EFM_ErasePgmCmd(Enable);
     /* Set sector erase mode. */
-    M4_EFM->FWMC_f.PEMOD = EFM_MODE_SECTORERASE;
+    EFM_SetErasePgmMode(SectorErase);
 
     *(uint32_t*)u32Addr = 0x12345678u;
 
@@ -815,13 +799,13 @@ en_result_t EFM_SectorErase(uint32_t u32Addr)
         u16Timeout++;
         if(u16Timeout > 0x1000u)
         {
-            enRet = ErrorTimeout;
+            enRet = ErrorTimeout; 
         }
     }
 
     EFM_ClearFlag(EFM_FLAG_EOP);
     /* Set read only mode. */
-    M4_EFM->FWMC_f.PEMOD = EFM_MODE_READONLY;
+    EFM_SetErasePgmMode(ReadOnly1);
     EFM_ErasePgmCmd(Disable);
 
     /* recover CACHE */
@@ -851,7 +835,7 @@ en_result_t EFM_MassErase(uint32_t u32Addr)
 
     /* CLear the error flag. */
     EFM_ClearFlag(EFM_FLAG_WRPERR | EFM_FLAG_PEPRTERR | EFM_FLAG_PGSZERR |
-                  EFM_FLAG_PGMISMTCH | EFM_FLAG_EOP | EFM_FLAG_COLERR);
+                  EFM_FLAG_PGMISMTCH | EFM_FLAG_EOP | EFM_FLAG_RWERR);
 
     /* read back CACHE */
     u8tmp = (uint8_t)M4_EFM->FRMC_f.CACHE;
@@ -861,7 +845,7 @@ en_result_t EFM_MassErase(uint32_t u32Addr)
     /* Enable erase. */
     EFM_ErasePgmCmd(Enable);
     /* Set sector erase mode. */
-    M4_EFM->FWMC_f.PEMOD = EFM_MODE_CHIPERASE;
+    EFM_SetErasePgmMode(MassErase);
 
     *(uint32_t*)u32Addr = 0x12345678u;
 
@@ -870,13 +854,13 @@ en_result_t EFM_MassErase(uint32_t u32Addr)
         u16Timeout++;
         if(u16Timeout > 0x1000u)
         {
-            enRet = ErrorTimeout;
+            enRet = ErrorTimeout; 
         }
     }
 
     EFM_ClearFlag(EFM_FLAG_EOP);
     /* Set read only mode. */
-    M4_EFM->FWMC_f.PEMOD = EFM_MODE_READONLY;
+    EFM_SetErasePgmMode(ReadOnly1);
     EFM_ErasePgmCmd(Disable);
 
     /* recover CACHE */
@@ -905,7 +889,7 @@ en_result_t EFM_OtpLock(uint32_t u32Addr)
     /* Enable program. */
     EFM_ErasePgmCmd(Enable);
     /* Set single program mode. */
-    M4_EFM->FWMC_f.PEMOD = EFM_MODE_SINGLEPROGRAM;
+    EFM_SetErasePgmMode(SingleProgram);
 
     /* Lock the otp block. */
     *(uint32_t*)u32Addr = 0ul;
@@ -915,13 +899,13 @@ en_result_t EFM_OtpLock(uint32_t u32Addr)
         u16Timeout++;
         if(u16Timeout > 0x1000u)
         {
-            enRet = ErrorTimeout;
+            enRet = ErrorTimeout; 
         }
     }
 
     EFM_ClearFlag(EFM_FLAG_EOP);
     /* Set read only mode. */
-    M4_EFM->FWMC_f.PEMOD = EFM_MODE_READONLY;
+    EFM_SetErasePgmMode(ReadOnly1);
     EFM_ErasePgmCmd(Disable);
 
     return enRet;

@@ -48,8 +48,8 @@
  **   - 2018-11-27  1.0 Hongjh First version for Device Driver Library of USART.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_USART_H__
-#define __HC32F46X_USART_H__
+#ifndef __HC32F46x_USART_H__
+#define __HC32F46x_USART_H__
 
 /*******************************************************************************
  * Include files
@@ -385,7 +385,7 @@ en_result_t USART_SetBaudrate(M4_USART_TypeDef *USARTx,
 
 #endif /* DDL_USART_ENABLE */
 
-#endif /* __HC32F46X_USART_H__ */
+#endif /* __HC32F46x_USART_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

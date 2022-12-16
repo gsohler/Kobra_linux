@@ -48,8 +48,8 @@
  **   - 2018-11-02  1.0  Zhangxl First version for Device Driver Library Utility.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_UTILITY_H__
-#define __HC32F46X_UTILITY_H__
+#ifndef __HC32F46x_UTILITY_H__
+#define __HC32F46x_UTILITY_H__
 
 /*******************************************************************************
  * Include files
@@ -124,7 +124,7 @@ void Ddl_AssertHandler(uint8_t *file, int16_t line);
 
 #endif /* DDL_UTILITY_ENABLE */
 
-#endif /* __HC32F46X_UTILITY_H__ */
+#endif /* __HC32F46x_UTILITY_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

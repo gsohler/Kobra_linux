@@ -220,12 +220,6 @@
     (TimeraFlagOverflow == (x))                 ||                             \
     (TimeraFlagUnderflow == (x)))
 
-/*! Parameter valid check for common trigger. */
-#define IS_VALID_COM_TRIGGER(x)                                                \
-(   (TimeraComTrigger_1 == (x))                 ||                             \
-    (TimeraComTrigger_2 == (x))                 ||                             \
-    (TimeraComTrigger_1_2 == (x)))
-
 /*!< Parameter valid check for event source */
 #define IS_VALID_EVENT_SOURCE(x)                ((x) <= 511u)
 
@@ -1440,7 +1434,7 @@ en_result_t TIMERA_HwTriggerInit(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw_t
  ** \arg M4_TMRA6                       Timera unit 6 configuration Address
  **
  ** \param [in] pstcHwStartup           Pointer to timera hardware startup configuration
- ** \arg See the struct #stc_timera_hw_startup_config_t
+ ** \arg See the struct #stc_timera_hw_startup_cofig_t
  **
  ** \retval Ok                          Process successfully done
  ** \retval ErrorInvalidParameter       If one of following cases matches:
@@ -1448,7 +1442,7 @@ en_result_t TIMERA_HwTriggerInit(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw_t
  **                                     - pstcHwStartup == NULL
  **
  ******************************************************************************/
-en_result_t TIMERA_HwStartupConfig(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw_startup_config_t *pstcHwStartup)
+en_result_t TIMERA_HwStartupConfig(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw_startup_cofig_t *pstcHwStartup)
 {
     en_result_t enRet = ErrorInvalidParameter;
 
@@ -1481,7 +1475,7 @@ en_result_t TIMERA_HwStartupConfig(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw
  ** \arg M4_TMRA6                       Timera unit 6 configuration Address
  **
  ** \param [in] pstcHwStop              Pointer to timera hardware stop configuration
- ** \arg See the struct #stc_timera_hw_stop_config_t
+ ** \arg See the struct #stc_timera_hw_stop_cofig_t
  **
  ** \retval Ok                          Process successfully done
  ** \retval ErrorInvalidParameter       If one of following cases matches:
@@ -1489,7 +1483,7 @@ en_result_t TIMERA_HwStartupConfig(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw
  **                                     - pstcHwStop == NULL
  **
  ******************************************************************************/
-en_result_t TIMERA_HwStopConfig(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw_stop_config_t *pstcHwStop)
+en_result_t TIMERA_HwStopConfig(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw_stop_cofig_t *pstcHwStop)
 {
     en_result_t enRet = ErrorInvalidParameter;
 
@@ -1893,7 +1887,7 @@ en_result_t TIMERA_SetCountTriggerSrc(en_event_src_t enTriggerSrc)
     /* Check parameters */
     DDL_ASSERT(IS_VALID_EVENT_SOURCE(enTriggerSrc));
 
-    M4_AOS->TMRA_HTSSR0_f.TRGSEL = enTriggerSrc;
+    M4_AOS->TMRA_HTSSR0 = enTriggerSrc;
 
     return enRet;
 }
@@ -1915,83 +1909,7 @@ en_result_t TIMERA_SetCaptureTriggerSrc(en_event_src_t enTriggerSrc)
     /* Check parameters */
     DDL_ASSERT(IS_VALID_EVENT_SOURCE(enTriggerSrc));
 
-    M4_AOS->TMRA_HTSSR1_f.TRGSEL = enTriggerSrc;
-
-    return enRet;
-}
-
-/**
- *******************************************************************************
- ** \brief Enable or disable TimerA counter common trigger.
- **
- ** \param [in] enComTrigger            TimerA common trigger selection.
- ** \arg TimeraComTrigger_1             Select common trigger 1
- ** \arg TimeraComTrigger_2             Select common trigger 2
- ** \arg TimeraComTrigger_1_2           Select common trigger 1 and 2
- **
- ** \param [in] enNewSta                The function new state
- ** \arg Disable                        Disable the specified common trigger.
- ** \arg Enable                         Enable the specified common trigger.
- **
- ** \retval Ok                          Process successfully done
- **
- ******************************************************************************/
-en_result_t TIMERA_CountComTriggerCmd(en_timera_com_trigger_t enComTrigger, en_functional_state_t enNewSta)
-{
-    en_result_t enRet = Ok;
-    uint32_t u32ComTrig;
-
-    /* Check parameters */
-    DDL_ASSERT(IS_VALID_COM_TRIGGER(enComTrigger));
-    DDL_ASSERT(IS_FUNCTIONAL_STATE(enNewSta));
-
-    u32ComTrig = (uint32_t)enComTrigger << 30u;
-    if (enNewSta == Enable)
-    {
-        M4_AOS->TMRA_HTSSR0 |= u32ComTrig;
-    }
-    else
-    {
-        M4_AOS->TMRA_HTSSR0 &= ~u32ComTrig;
-    }
-
-    return enRet;
-}
-
-/**
- *******************************************************************************
- ** \brief Enable or disable TimerA capture common trigger.
- **
- ** \param [in] enComTrigger            TimerA common trigger selection.
- ** \arg TimeraComTrigger_1             Select common trigger 1
- ** \arg TimeraComTrigger_2             Select common trigger 2
- ** \arg TimeraComTrigger_1_2           Select common trigger 1 and 2
- **
- ** \param [in] enNewSta                The function new state
- ** \arg Disable                        Disable the specified common trigger.
- ** \arg Enable                         Enable the specified common trigger.
- **
- ** \retval Ok                          Process successfully done
- **
- ******************************************************************************/
-en_result_t TIMERA_CaptureComTriggerCmd(en_timera_com_trigger_t enComTrigger, en_functional_state_t enNewSta)
-{
-    en_result_t enRet = Ok;
-    uint32_t u32ComTrig;
-
-    /* Check parameters */
-    DDL_ASSERT(IS_VALID_COM_TRIGGER(enComTrigger));
-    DDL_ASSERT(IS_FUNCTIONAL_STATE(enNewSta));
-
-    u32ComTrig = (uint32_t)enComTrigger << 30u;
-    if (enNewSta == Enable)
-    {
-        M4_AOS->TMRA_HTSSR1 |= u32ComTrig;
-    }
-    else
-    {
-        M4_AOS->TMRA_HTSSR1 &= ~u32ComTrig;
-    }
+    M4_AOS->TMRA_HTSSR1 = enTriggerSrc;
 
     return enRet;
 }

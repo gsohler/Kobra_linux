@@ -184,7 +184,7 @@ static void AdcTriggerConfig(void)
      * If select an event(@ref en_event_src_t) to trigger ADC,
      * AOS must be enabled first.
      */
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
 
     /* ADC1 sequence A will be started by software. */
     ADC_TriggerSrcCmd(M4_ADC1, ADC_SEQ_A, Disable);
@@ -383,7 +383,7 @@ void adc_dma_config(void)
     /* AOS must be enabled to use DMA */
     /* AOS enabled at first. */
     /* If you have enabled AOS before, then the following statement is not needed. */
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
     DMA_SetTriggerSrc(M4_DMA2, DmaCh3, EVT_ADC1_EOCA);
 }
 

@@ -49,8 +49,8 @@
  **                      Timera.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_TIMERA_H__
-#define __HC32F46X_TIMERA_H__
+#ifndef __HC32F46x_TIMERA_H__
+#define __HC32F46x_TIMERA_H__
 
 /*******************************************************************************
  * Include files
@@ -284,17 +284,6 @@ typedef enum en_timera_specify_output
 
 /**
  *******************************************************************************
- ** \brief Timera common trigger source enumeration
- ******************************************************************************/
-typedef enum en_timera_com_trigger
-{
-    TimeraComTrigger_1   = 1u,                      ///< Select common trigger 1.
-    TimeraComTrigger_2   = 2u,                      ///< Select common trigger 2.
-    TimeraComTrigger_1_2 = 3u,                      ///< Select common trigger 1 and 2.
-} en_timera_com_trigger_t;
-
-/**
- *******************************************************************************
  ** \brief Timera base init structure definition
  ******************************************************************************/
 typedef struct stc_timera_base_init
@@ -318,10 +307,10 @@ typedef struct stc_timera_compare_init
     en_timera_compare_match_output_t enCompareMatchOutput;          ///< Port status set when compare value match
     en_timera_period_match_output_t  enPeriodMatchOutput;           ///< Port status set when period value match
     en_timera_specify_output_t       enSpecifyOutput;               ///< Specify port status,next period valid,priority more than other port status set
-    en_functional_state_t            enCacheEn;                     ///< Enable/Disable cacheÔºåOnly unit 1„ÄÅ3„ÄÅ5„ÄÅ7 valid
-    en_functional_state_t            enTriangularTroughTransEn;     ///< Enable/Disable triangular wave trough transmit cache valueÔºåOnly unit 1„ÄÅ3„ÄÅ5„ÄÅ7 valid
-    en_functional_state_t            enTriangularCrestTransEn;      ///< Enable/Disable triangular wave crest transmit cache valueÔºåOnly unit 1„ÄÅ3„ÄÅ5„ÄÅ7 valid
-    uint16_t                         u16CompareCacheVal;            ///< Compare cache value,Only unit 1„ÄÅ3„ÄÅ5„ÄÅ7 valid
+    en_functional_state_t            enCacheEn;                     ///< Enable/Disable cache£¨Only unit 1°¢3°¢5°¢7 valid
+    en_functional_state_t            enTriangularTroughTransEn;     ///< Enable/Disable triangular wave trough transmit cache value£¨Only unit 1°¢3°¢5°¢7 valid
+    en_functional_state_t            enTriangularCrestTransEn;      ///< Enable/Disable triangular wave crest transmit cache value£¨Only unit 1°¢3°¢5°¢7 valid
+    uint16_t                         u16CompareCacheVal;            ///< Compare cache value,Only unit 1°¢3°¢5°¢7 valid
 } stc_timera_compare_init_t;
 
 /**
@@ -347,7 +336,7 @@ typedef struct stc_timera_capture_init
  **
  ** \note _<t>_ is unit number,range 1~6
  ** \note PWMn is channel of unit,range 1-8
- ** \note n=2„ÄÅ4„ÄÅ6 when m=1„ÄÅ3„ÄÅ5 or n=1„ÄÅ3„ÄÅ5 when m=2„ÄÅ4„ÄÅ6
+ ** \note n=2°¢4°¢6 when m=1°¢3°¢5 or n=1°¢3°¢5 when m=2°¢4°¢6
  ******************************************************************************/
 typedef struct stc_timera_orthogonal_coding_init
 {
@@ -392,12 +381,12 @@ typedef struct stc_timera_orthogonal_coding_init
  ** \note _<t>_ is unit number,range 1~6
  ** \note TMRA_HTSSR0 trigger startup only when unit 2~6 valid,unit 1 is invalid
  ******************************************************************************/
-typedef struct stc_timera_hw_startup_config
+typedef struct stc_timera_hw_startup_cofig
 {
     en_functional_state_t enTrigRisingStartupEn;                    ///< Hardware startup TIMA_<t> when TIMA_<t>_TRIG sample rising edge(sync start valid)
     en_functional_state_t enTrigFallingStartupEn;                   ///< Hardware startup TIMA_<t> when TIMA_<t>_TRIG sample falling edge(sync start valid)
     en_functional_state_t enSpecifyEventStartupEn;                  ///< Hardware startup TIMA_<t> when TIMA_HTSSR0 register Specify event trigger
-} stc_timera_hw_startup_config_t;
+} stc_timera_hw_startup_cofig_t;
 
 /**
  *******************************************************************************
@@ -405,19 +394,19 @@ typedef struct stc_timera_hw_startup_config
  **
  ** \note _<t>_ is unit number,range 1~6
  ******************************************************************************/
-typedef struct stc_timera_hw_stop_config
+typedef struct stc_timera_hw_stop_cofig
 {
     en_functional_state_t enTrigRisingStopEn;                       ///< Hardware stop TIMA_<t> when TIMA_<t>_TRIG sample rising edge
     en_functional_state_t enTrigFallingStopEn;                      ///< Hardware stop TIMA_<t> when TIMA_<t>_TRIG sample falling edge
     en_functional_state_t enSpecifyEventStopEn;                     ///< Hardware stop TIMA_<t> when TIMA_HTSSR0 register Specify event trigger
-} stc_timera_hw_stop_config_t;
+} stc_timera_hw_stop_cofig_t;
 
 /**
  *******************************************************************************
  ** \brief Timera hardware clear config structure definition
  **
  ** \note _<t>_ is unit number,range 1~6
- ** \note n=2„ÄÅ4„ÄÅ6 when m=1„ÄÅ3„ÄÅ5 or n=1„ÄÅ3„ÄÅ5 when m=2„ÄÅ4„ÄÅ6
+ ** \note n=2°¢4°¢6 when m=1°¢3°¢5 or n=1°¢3°¢5 when m=2°¢4°¢6
  ******************************************************************************/
 typedef struct stc_timera_hw_clear_config
 {
@@ -436,8 +425,8 @@ typedef struct stc_timera_hw_clear_config
  ******************************************************************************/
 typedef struct stc_timera_hw_trigger_init
 {
-    stc_timera_hw_startup_config_t stcHwStartup;                     ///< Hardware startup condition config
-    stc_timera_hw_stop_config_t    stcHwStop;                        ///< Hardware stop condition config
+    stc_timera_hw_startup_cofig_t stcHwStartup;                     ///< Hardware startup condition config
+    stc_timera_hw_stop_cofig_t    stcHwStop;                        ///< Hardware stop condition config
     stc_timera_hw_clear_config_t  stcHwClear;                       ///< Hardware clear condition config
 } stc_timera_hw_trigger_init_t;
 
@@ -493,8 +482,8 @@ en_result_t TIMERA_OrthogonalCodingFilterCmd(M4_TMRA_TypeDef *TIMERAx, en_timera
 
 /* Hardware control functions */
 en_result_t TIMERA_HwTriggerInit(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw_trigger_init_t *pstcHwTriggerInit);
-en_result_t TIMERA_HwStartupConfig(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw_startup_config_t *pstcHwStartup);
-en_result_t TIMERA_HwStopConfig(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw_stop_config_t *pstcHwStop);
+en_result_t TIMERA_HwStartupConfig(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw_startup_cofig_t *pstcHwStartup);
+en_result_t TIMERA_HwStopConfig(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw_stop_cofig_t *pstcHwStop);
 en_result_t TIMERA_HwClearConfig(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw_clear_config_t *pstcHwClear);
 
 /* interrupt and flags functions */
@@ -508,8 +497,6 @@ en_result_t TIMERA_EventCmd(M4_TMRA_TypeDef *TIMERAx, en_timera_channel_t enChan
                             en_functional_state_t enNewSta);
 en_result_t TIMERA_SetCountTriggerSrc(en_event_src_t enTriggerSrc);
 en_result_t TIMERA_SetCaptureTriggerSrc(en_event_src_t enTriggerSrc);
-en_result_t TIMERA_CountComTriggerCmd(en_timera_com_trigger_t enComTrigger, en_functional_state_t enNewSta);
-en_result_t TIMERA_CaptureComTriggerCmd(en_timera_com_trigger_t enComTrigger, en_functional_state_t enNewSta);
 
 //@} // TimeraGroup
 
@@ -519,7 +506,7 @@ en_result_t TIMERA_CaptureComTriggerCmd(en_timera_com_trigger_t enComTrigger, en
 
 #endif /* DDL_TIMERA_ENABLE */
 
-#endif /* __HC32F46X_TIMERA_H__ */
+#endif /* __HC32F46x_TIMERA_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

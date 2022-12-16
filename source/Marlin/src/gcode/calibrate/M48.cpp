@@ -153,9 +153,9 @@ void GcodeSuite::M48() {
       if (n_legs) {
 
         // Pick a random direction, starting angle, and radius
-        const int dir = ((random()%10) > 5.0) ? -1 : 1;  // clockwise or counter clockwise
-        float angle = random()%360;
-        const float radius = random()%(
+        const int dir = ((rand()%10) > 5.0) ? -1 : 1;  // clockwise or counter clockwise
+        float angle = rand()%360;
+        const float radius = rand()%(
           #if ENABLED(DELTA)
             int(0.1250000000 * (DELTA_PRINTABLE_RADIUS)),
             int(0.3333333333 * (DELTA_PRINTABLE_RADIUS))
@@ -181,7 +181,7 @@ void GcodeSuite::M48() {
           }
           else {
             // Just move further along the perimeter.
-            delta_angle = dir * (float)(random()%20)+25;
+            delta_angle = dir * (float)(rand()%20)+25;
           }
           angle += delta_angle;
 

@@ -270,27 +270,6 @@ __STATIC_INLINE void AOS_SW_Trigger(void)
     bM4_AOS_INT_SFTTRG_STRG = 1u;
 }
 
-/**
- *******************************************************************************
- ** \brief AOS common trigger source 1 config.
- **
- ******************************************************************************/
-__STATIC_INLINE void AOS_COM_Trigger1(en_event_src_t enTrig)
-{
-    M4_AOS->COMTRG1 = enTrig;
-}
-
-/**
- *******************************************************************************
- ** \brief AOS common trigger source 2 config.
- **
- ******************************************************************************/
-__STATIC_INLINE void AOS_COM_Trigger2(en_event_src_t enTrig)
-{
-    M4_AOS->COMTRG2 = enTrig;
-}
-
-
 /*******************************************************************************
  * Global variable definitions ('extern')
  ******************************************************************************/
@@ -538,8 +517,8 @@ __WEAKDEF void I2c3TxEnd_IrqHandler(void);
 __WEAKDEF void I2c3TxEmpty_IrqHandler(void);
 __WEAKDEF void I2c3Err_IrqHandler(void);
 
-__WEAKDEF void Pvd1_IrqHandler(void);
-__WEAKDEF void Pvd2_IrqHandler(void);
+__WEAKDEF void Lvd1_IrqHandler(void);
+__WEAKDEF void Lvd2_IrqHandler(void);
 
 __WEAKDEF void FcmErr_IrqHandler(void);
 __WEAKDEF void FcmEnd_IrqHandler(void);

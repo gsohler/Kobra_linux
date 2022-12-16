@@ -139,7 +139,7 @@
     (((x) >= EVT_TMRA1_OVF) && ((x) <= EVT_TMRA5_CMP))                 ||      \
     (((x) >= EVT_TMRA6_OVF) && ((x) <= EVT_TMRA6_CMP))                 ||      \
     (((x) >= EVT_USART1_EI) && ((x) <= EVT_USART4_RTO))                ||      \
-    (((x) >= EVT_SPI1_SPRI) && ((x) <= EVT_AOS_STRG))                  ||      \
+    (((x) >= EVT_SPI1_SRRI) && ((x) <= EVT_AOS_STRG))                  ||      \
     (((x) >= EVT_TMR41_SCMUH) && ((x) <= EVT_TMR42_SCMWL))             ||      \
     (((x) >= EVT_TMR43_SCMUH) && ((x) <= EVT_TMR43_SCMWL))             ||      \
     (((x) >= EVT_EVENT_PORT1)  && ((x) <= EVT_EVENT_PORT4))            ||      \
@@ -148,19 +148,13 @@
     (((x) >= EVT_I2S3_TXIRQOUT)  && ((x) <= EVT_I2S3_RXIRQOUT))        ||      \
     (((x) >= EVT_I2S4_TXIRQOUT)  && ((x) <= EVT_I2S4_RXIRQOUT))        ||      \
     (((x) >= EVT_ACMP1)  && ((x) <= EVT_ACMP3))                        ||      \
-    (((x) >= EVT_I2C1_RXI) && ((x) <= EVT_I2C3_EEI))                   ||      \
+    (((x) >= EVT_I2C1_RXI) && ((x) <= EVT_I2C3_EE1))                   ||      \
     (((x) >= EVT_PVD_PVD1) && ((x) <= EVT_OTS))                        ||      \
     ((x) == EVT_WDT_REFUDF)                                            ||      \
     (((x) >= EVT_ADC1_EOCA) && ((x) <= EVT_TRNG_END))                  ||      \
     (((x) >= EVT_SDIOC1_DMAR) && ((x) <= EVT_SDIOC1_DMAW))             ||      \
     (((x) >= EVT_SDIOC2_DMAR) && ((x) <= EVT_SDIOC2_DMAW))             ||      \
     ((x) == EVT_MAX))
-
-/*! Parameter valid check for DCU common trigger. */
-#define IS_DCU_COM_TRIGGER(x)                                                   \
-(   ((x) == DcuComTrigger_1)                    ||                              \
-    ((x) == DcuComTrigger_2)                    ||                              \
-    ((x) == DcuComTrigger_1_2))
 
 /*!< Get the specified DATA register address of the specified DCU unit */
 #define DCU_DATAx(__DCUx__, __DATAx__)            ((uint32_t)(&(__DCUx__)->DATA0) + ((uint32_t)(__DATAx__)) * 4u)
@@ -213,24 +207,24 @@ en_result_t DCU_Init(M4_DCU_TypeDef *DCUx, const stc_dcu_init_t *pstcInitCfg)
         DDL_ASSERT(IS_VALID_DCU_DATAZ_SIZE(pstcInitCfg->enDataSize));
         DDL_ASSERT(IS_VALID_DCU_INT_WIN_MODE(pstcInitCfg->enIntWinMode));
         DDL_ASSERT(IS_VALID_DCU_CMP_TRIG_MODE(pstcInitCfg->enCmpTriggerMode));
-
+        
         /* De-initialize dcu register value */
         DCUx->CTL = 0ul;
         DCUx->INTSEL = 0ul;
         DCUx->FLAGCLR = 0x7Ful;
-
+        
         /* Set dcu operation mode */
         DCUx->CTL_f.MODE = (uint32_t)pstcInitCfg->enOperation;
-
+        
         /* Set dcu data sieze */
         DCUx->CTL_f.DATASIZE = (uint32_t)pstcInitCfg->enDataSize;
-
+        
         /* Set dcu compare trigger mode */
         DCUx->CTL_f.COMP_TRG = (uint32_t)pstcInitCfg->enCmpTriggerMode;
-
+        
         /* Set dcu interrupt window mode */
         DCUx->INTSEL_f.INT_WIN = (uint32_t)pstcInitCfg->enIntWinMode;
-
+        
         DCUx->INTSEL = pstcInitCfg->u32IntSel;
         DCUx->CTL_f.INTEN = (uint32_t)(pstcInitCfg->enIntCmd);
 
@@ -408,7 +402,7 @@ en_dcu_data_size_t DCU_GetDataSize(M4_DCU_TypeDef *DCUx)
  ** \param [in] enIntWinMode            Interrupt window mode
  ** \arg DcuIntInvalid                  DCU don't occur interrupt
  ** \arg DcuWinIntInvalid               DCU window interrupt is invalid.
- ** \arg DcuInsideWinCmpInt             DCU occur interrupt when DATA2 <= DATA0 <= DATA2
+ ** \arg DcuInsideWinCmpInt             DCU occur interrupt when DATA2 ¡Ü DATA0 ¡Ü DATA2
  ** \arg DcuOutsideWinCmpInt            DCU occur interrupt when DATA0 > DATA1 or DATA0 < DATA2
  **
  ** \retval Ok                          Set successfully.
@@ -445,7 +439,7 @@ en_result_t DCU_SetIntWinMode(M4_DCU_TypeDef *DCUx,
  **
  ** \retval DcuIntInvalid               DCU don't occur interrupt
  ** \retval DcuWinIntInvalid            DCU window interrupt is invalid.
- ** \retval DcuInsideWinCmpInt          DCU occur interrupt when DATA2 <= DATA0 <= DATA2
+ ** \retval DcuInsideWinCmpInt          DCU occur interrupt when DATA2 ¡Ü DATA0 ¡Ü DATA2
  ** \retval DcuOutsideWinCmpInt         DCU occur interrupt when DATA0 > DATA1 or DATA0 < DATA2
  **
  ******************************************************************************/
@@ -912,49 +906,11 @@ en_result_t DCU_SetTriggerSrc(M4_DCU_TypeDef *DCUx,
         /* Check the parameters */
         DDL_ASSERT(IS_VALID_TRG_SRC_EVENT(enTriggerSrc));
 
-        *TRGSELx = (*TRGSELx & (~((uint32_t)EVT_MAX))) | (uint32_t)enTriggerSrc;
+        *TRGSELx = (uint32_t)enTriggerSrc;
         enRet = Ok;
     }
 
     return enRet;
-}
-
-/**
- *******************************************************************************
- ** \brief Enable or disable DCU common trigger.
- **
- ** \param [in] DCUx                    Pointer to DCU instance register base
- ** \arg M4_DCU1                        DCU unit 1 instance register base
- ** \arg M4_DCU2                        DCU unit 2 instance register base
- ** \arg M4_DCU3                        DCU unit 3 instance register base
- ** \arg M4_DCU4                        DCU unit 4 instance register base
- ** \param [in] enComTrigger            DCU common trigger selection. See @ref en_dcu_com_trigger_t for details.
- ** \param [in] enState                 Enable or disable the specified common trigger.
- **
- ** \retval None.
- **
- ******************************************************************************/
-void DCU_ComTriggerCmd(M4_DCU_TypeDef *DCUx,
-                        en_dcu_com_trigger_t enComTrigger,
-                        en_functional_state_t enState)
-{
-    uint32_t u32ComTrig = (uint32_t)enComTrigger;
-    __IO uint32_t *TRGSELx = DCU_TRGSELx(DCUx);
-
-    if (NULL != TRGSELx)
-    {
-        DDL_ASSERT(IS_DCU_COM_TRIGGER(enComTrigger));
-        DDL_ASSERT(IS_FUNCTIONAL_STATE(enState));
-
-        if (enState == Enable)
-        {
-            *TRGSELx |= (u32ComTrig << 30u);
-        }
-        else
-        {
-            *TRGSELx &= ~(u32ComTrig << 30u);
-        }
-    }
 }
 
 /**

@@ -48,8 +48,8 @@
  **   - 2018-11-20  1.0  Yangjp  First version for Device Driver Library of Qspi.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_QSPI_H__
-#define __HC32F46X_QSPI_H__
+#ifndef __HC32F46x_QSPI_H__
+#define __HC32F46x_QSPI_H__
 
 /*******************************************************************************
  * Include files
@@ -428,7 +428,7 @@ en_result_t QSPI_ClearFlag(en_qspi_flag_type_t enFlag);
 
 #endif /* DDL_QSPI_ENABLE */
 
-#endif /* __HC32F46X_QSPI_H__ */
+#endif /* __HC32F46x_QSPI_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

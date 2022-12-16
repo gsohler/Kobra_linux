@@ -48,8 +48,8 @@
  **   - 2018-11-19  1.0  Husj  First version for Device Driver Library of Timer6.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_TIMER6_H__
-#define __HC32F46X_TIMER6_H__
+#ifndef __HC32F46x_TIMER6_H__
+#define __HC32F46x_TIMER6_H__
 
 /*******************************************************************************
  * Include files
@@ -474,17 +474,6 @@ typedef enum en_timer6_status
     Timer6DIRF    = 31,     ///< Count direction
 }en_timer6_status_t;
 
-/**
- *******************************************************************************
- ** \brief Timer6 common trigger source select enumeration
- **
- ******************************************************************************/
-typedef enum en_timer6_com_trigger
-{
-    Timer6ComTrigger_1   = 1u,                 ///< Select common trigger 1.
-    Timer6ComTrigger_2   = 2u,                 ///< Select common trigger 2.
-    Timer6ComTrigger_1_2 = 3u,                 ///< Select common trigger 1 and 2.
-} en_timer6_com_trigger_t;
 
 /**
  ******************************************************************************
@@ -738,16 +727,10 @@ en_result_t Timer6_ClearHwCaptureA(M4_TMR6_TypeDef *TMR6x);
 en_result_t Timer6_ConfigHwCaptureB(M4_TMR6_TypeDef *TMR6x, en_timer6_hw_trig_t enTimer6HwCaptureB);
 /* Clear Hardware capture event B */
 en_result_t Timer6_ClearHwCaptureB(M4_TMR6_TypeDef *TMR6x);
-
-
 /* Set trigger source 0 of hardware event */
 en_result_t Timer6_SetTriggerSrc0(en_event_src_t enTriggerSrc);
 /* Set trigger source 1 of hardware event */
 en_result_t Timer6_SetTriggerSrc1(en_event_src_t enTriggerSrc);
-/* Enable or disable Timer6 common trigger for Hardware trigger source 0 */
-void TIMER6_ComTriggerCmd0(en_timer6_com_trigger_t enComTrigger, en_functional_state_t enState);
-/* Enable or disable Timer6 common trigger for Hardware trigger source 1 */
-void TIMER6_ComTriggerCmd1(en_timer6_com_trigger_t enComTrigger, en_functional_state_t enState);
 
 /* Z phase input mask config */
 en_result_t Timer6_ConfigZMask(M4_TMR6_TypeDef *TMR6x, const stc_timer6_zmask_cfg_t* pstcTimer6ZMaskCfg);
@@ -760,7 +743,7 @@ en_result_t Timer6_ConfigZMask(M4_TMR6_TypeDef *TMR6x, const stc_timer6_zmask_cf
 
 #endif /* DDL_TIMER6_ENABLE */
 
-#endif /* __HC32F46X_TIMER6_H__ */
+#endif /* __HC32F46x_TIMER6_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

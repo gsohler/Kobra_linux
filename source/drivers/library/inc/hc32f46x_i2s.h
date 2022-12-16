@@ -49,8 +49,8 @@
  **
  ******************************************************************************/
 
-#ifndef __HC32F46X_I2S_H__
-#define __HC32F46X_I2S_H__
+#ifndef __HC32F46x_I2S_H__
+#define __HC32F46x_I2S_H__
 
 /*******************************************************************************
  * Include files
@@ -125,16 +125,6 @@ typedef enum en_i2s_mode
 
 /**
  *******************************************************************************
- ** \brief I2S full duplex mode
- ******************************************************************************/
-typedef enum en_i2s_full_duplex_mode
-{
-    I2s_HalfDuplex = 0u,                 ///< I2S half duplex
-    I2s_FullDuplex = 1u,                 ///< I2S full duplex
-}en_i2s_full_duplex_mode_t;
-
-/**
- *******************************************************************************
  ** \brief I2S standard
  ******************************************************************************/
 typedef enum en_i2s_standard
@@ -144,6 +134,16 @@ typedef enum en_i2s_standard
     Std_LSBJust = 2u,                   ///< I2S LSB justified standart
     Std_PCM     = 3u,                   ///< I2S PCM standart
 }en_i2s_standard_t;
+
+/**
+ *******************************************************************************
+ ** \brief I2S duplex transfer mode
+ ******************************************************************************/
+typedef enum en_i2s_duplex
+{
+    I2s_HardDuplex = 0u,
+    I2s_FullDuplex = 1u,
+}en_i2s_duplex_t;
 
 /**
  *******************************************************************************
@@ -164,7 +164,23 @@ typedef enum en_i2s_data_len
     I2s_DataLen_16Bit = 0u,
     I2s_DataLen_24Bit = 1u,
     I2s_DataLen_32Bit = 2u,
-}en_i2s_data_len_t;
+}en_i2s_data_len;
+
+/**
+ *******************************************************************************
+ ** \brief I2S clock source
+ ******************************************************************************/
+typedef enum en_i2s_clksrc
+{
+    I2s_clk_PCLK3 = 0u,
+    I2s_clk_MPLLP = 8u,
+    I2s_clk_MPLLQ = 9u,
+    I2s_clk_MPLLR = 10u,
+    I2s_clk_UPLLP = 11u,
+    I2s_clk_UPLLQ = 12u,
+    I2s_clk_UPLLR = 13u,
+}en_i2s_clksrc_t;
+
 
 /**
  *******************************************************************************
@@ -173,10 +189,9 @@ typedef enum en_i2s_data_len
 typedef struct stc_i2s_config
 {
     en_i2s_mode_t               enMode;              ///< I2S mode
-    en_i2s_full_duplex_mode_t   enFullDuplexMode;    ///< I2S full duplex mode
     uint32_t                    u32I2sInterClkFreq;  ///< I2S internal clock frequency
     en_i2s_standard_t           enStandrad;          ///< I2S standard
-    en_i2s_data_len_t           enDataBits;          ///< I2S data format, data bits
+    en_i2s_data_len             enDataBits;          ///< I2S data format, data bits
     en_i2s_ch_len_t             enChanelLen;         ///< I2S channel length
     en_functional_state_t       enMcoOutEn;          ///< I2S MCK output config
     en_functional_state_t       enExckEn;            ///< I2S EXCK function config
@@ -200,6 +215,9 @@ typedef struct stc_i2s_config
 
 /* if use external clock open this define */
 #define I2S_EXTERNAL_CLOCK_VAL                      (12288000ul)
+
+/* 0: Half Duplex  1: Full Duplex */
+#define DUPLEX_MODE                                 (0ul)
 
 /* 0,1 or 2 config for tx or tx buffer interrupt warning level */
 #define RXBUF_IRQ_WL                                (1ul)
@@ -232,7 +250,7 @@ en_result_t I2s_DeInit(M4_I2S_TypeDef* pstcI2sReg);
 
 #endif /* DDL_I2S_ENABLE */
 
-#endif /* __HC32F46X_I2S_H__ */
+#endif /* __HC32F46x_I2S_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

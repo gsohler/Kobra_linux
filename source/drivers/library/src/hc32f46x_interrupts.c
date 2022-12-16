@@ -3099,7 +3099,7 @@ void IRQ137_Handler(void)
         Spi1TxEmpty_IrqHandler();
     }
     /* SPI Ch.1 bus idle */
-    if ((u32Tmp1 & BIT_MASK_11) && (!(u32Tmp2 & BIT_MASK_01)) && (VSSEL137 & BIT_MASK_13))
+    if ((u32Tmp1 & BIT_MASK_11) && (!(u32Tmp2 & BIT_MASK_00)) && (VSSEL137 & BIT_MASK_13))
     {
         Spi1Idle_IrqHandler();
     }
@@ -3124,7 +3124,7 @@ void IRQ137_Handler(void)
         Spi2TxEmpty_IrqHandler();
     }
     /* SPI Ch.2 bus idle */
-    if ((u32Tmp1 & BIT_MASK_11) && (!(u32Tmp2 & BIT_MASK_01)) && (VSSEL137 & BIT_MASK_18))
+    if ((u32Tmp1 & BIT_MASK_11) && (!(u32Tmp2 & BIT_MASK_00)) && (VSSEL137 & BIT_MASK_18))
     {
         Spi2Idle_IrqHandler();
     }
@@ -3149,7 +3149,7 @@ void IRQ137_Handler(void)
         Spi3TxEmpty_IrqHandler();
     }
     /* SPI Ch.3 bus idle */
-    if ((u32Tmp1 & BIT_MASK_11) && (!(u32Tmp2 & BIT_MASK_01)) && (VSSEL137 & BIT_MASK_23))
+    if ((u32Tmp1 & BIT_MASK_11) && (!(u32Tmp2 & BIT_MASK_00)) && (VSSEL137 & BIT_MASK_23))
     {
         Spi3Idle_IrqHandler();
     }
@@ -3174,7 +3174,7 @@ void IRQ137_Handler(void)
         Spi4TxEmpty_IrqHandler();
     }
     /* SPI Ch.4 bus idle */
-    if ((u32Tmp1 & BIT_MASK_11) && (!(u32Tmp2 & BIT_MASK_01)) && (VSSEL137 & BIT_MASK_28))
+    if ((u32Tmp1 & BIT_MASK_11) && (!(u32Tmp2 & BIT_MASK_00)) && (VSSEL137 & BIT_MASK_28))
     {
         Spi4Idle_IrqHandler();
     }
@@ -3559,20 +3559,20 @@ void IRQ141_Handler(void)
             I2c1RxEnd_IrqHandler();
         }
     }
-    /* I2C Ch.1 Transmit data empty */
-    if(1ul == bM4_I2C1_CR2_TEMPTYIE)
-    {
-        if ((1ul == bM4_I2C1_SR_TEMPTYF) && (VSSEL141 & BIT_MASK_05))
-        {
-            I2c1TxEmpty_IrqHandler();
-        }
-    }
     /* I2C Ch.1 Transmit completed */
     if(1ul == bM4_I2C1_CR2_TENDIE)
     {
-        if ((1ul == bM4_I2C1_SR_TENDF) && (VSSEL141 & BIT_MASK_06))
+        if ((1ul == bM4_I2C1_SR_TENDF) && (VSSEL141 & BIT_MASK_05))
         {
             I2c1TxEnd_IrqHandler();
+        }
+    }
+    /* I2C Ch.1 Transmit data empty */
+    if(1ul == bM4_I2C1_CR2_TEMPTYIE)
+    {
+        if ((1ul == bM4_I2C1_SR_TEMPTYF) && (VSSEL141 & BIT_MASK_06))
+        {
+            I2c1TxEmpty_IrqHandler();
         }
     }
     /* I2C Ch.1 Error */
@@ -3590,20 +3590,20 @@ void IRQ141_Handler(void)
             I2c2RxEnd_IrqHandler();
         }
     }
-    /* I2C Ch.2 Transmit data empty */
-    if(1ul == bM4_I2C2_CR2_TEMPTYIE)
-    {
-        if ((1ul == bM4_I2C2_SR_TEMPTYF) && (VSSEL141 & BIT_MASK_09))
-        {
-            I2c2TxEmpty_IrqHandler();
-        }
-    }
     /* I2C Ch.2 Transmit completed */
     if(1ul == bM4_I2C2_CR2_TENDIE)
     {
-        if ((1ul == bM4_I2C2_SR_TENDF)  && (VSSEL141 & BIT_MASK_10))
+        if ((1ul == bM4_I2C2_SR_TENDF)  && (VSSEL141 & BIT_MASK_09))
         {
             I2c2TxEnd_IrqHandler();
+        }
+    }
+    /* I2C Ch.2 Transmit data empty */
+    if(1ul == bM4_I2C2_CR2_TEMPTYIE)
+    {
+        if ((1ul == bM4_I2C2_SR_TEMPTYF) && (VSSEL141 & BIT_MASK_10))
+        {
+            I2c2TxEmpty_IrqHandler();
         }
     }
     /* I2C Ch.2 Error */
@@ -3621,20 +3621,20 @@ void IRQ141_Handler(void)
             I2c3RxEnd_IrqHandler();
         }
     }
-    /* I2C Ch.3 Transmit data empty */
-    if(1ul == bM4_I2C3_CR2_TEMPTYIE)
-    {
-        if ((1ul == bM4_I2C3_SR_TEMPTYF) && (VSSEL141 & BIT_MASK_13))
-        {
-            I2c3TxEmpty_IrqHandler();
-        }
-    }
     /* I2C Ch.3 Transmit completed */
     if(1ul == bM4_I2C3_CR2_TENDIE)
     {
-        if ((1ul == bM4_I2C3_SR_TENDF)  && (VSSEL141 & BIT_MASK_14))
+        if ((1ul == bM4_I2C3_SR_TENDF)  && (VSSEL141 & BIT_MASK_13))
         {
             I2c3TxEnd_IrqHandler();
+        }
+    }
+    /* I2C Ch.3 Transmit data empty */
+    if(1ul == bM4_I2C3_CR2_TEMPTYIE)
+    {
+        if ((1ul == bM4_I2C3_SR_TEMPTYF) && (VSSEL141 & BIT_MASK_14))
+        {
+            I2c3TxEmpty_IrqHandler();
         }
     }
     /* I2C Ch.3 Error */
@@ -3644,20 +3644,20 @@ void IRQ141_Handler(void)
     {
         I2c3Err_IrqHandler();
     }
-    /* PVD Ch.1 detected */
+    /* LVD Ch.1 detected */
     if (1ul == bM4_SYSREG_PWR_PVDCR1_PVD1IRE)
     {
         if((1ul == bM4_SYSREG_PWR_PVDDSR_PVD1DETFLG) && (VSSEL141 & BIT_MASK_17))
         {
-            Pvd1_IrqHandler();
+            Lvd1_IrqHandler();
         }
     }
     if (1ul == bM4_SYSREG_PWR_PVDCR1_PVD2IRE)
     {
-        /* PVD Ch.2 detected */
+        /* LVD Ch.2 detected */
         if((1ul == bM4_SYSREG_PWR_PVDDSR_PVD2DETFLG) && (VSSEL141 & BIT_MASK_18))
         {
-            Pvd2_IrqHandler();
+            Lvd2_IrqHandler();
         }
     }
     /* Freq. calculate error detected */

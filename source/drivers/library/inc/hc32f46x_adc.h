@@ -315,18 +315,6 @@ typedef enum en_adc_pga_negative
 
 /**
  *******************************************************************************
- ** \brief  ADC common trigger source select
- **
- ******************************************************************************/
-typedef enum en_adc_com_trigger
-{
-    AdcComTrigger_1   = 0x1,            ///< Select common trigger 1.
-    AdcComTrigger_2   = 0x2,            ///< Select common trigger 2.
-    AdcComTrigger_1_2 = 0x3,            ///< Select common trigger 1 and 2.
-} en_adc_com_trigger_t;
-
-/**
- *******************************************************************************
  ** \brief Structure definition of ADC
  **
  ******************************************************************************/
@@ -485,8 +473,6 @@ en_result_t ADC_DeInit(M4_ADC_TypeDef *ADCx);
 en_result_t ADC_SetScanMode(M4_ADC_TypeDef *ADCx, en_adc_scan_mode_t enMode);
 en_result_t ADC_ConfigTriggerSrc(M4_ADC_TypeDef *ADCx, const stc_adc_trg_cfg_t *pstcTrgCfg);
 en_result_t ADC_TriggerSrcCmd(M4_ADC_TypeDef *ADCx, uint8_t u8Seq, en_functional_state_t enState);
-void ADC_ComTriggerCmd(M4_ADC_TypeDef *ADCx, en_adc_trgsel_t enTrgSel, \
-                       en_adc_com_trigger_t enComTrigger, en_functional_state_t enState);
 
 en_result_t ADC_AddAdcChannel(M4_ADC_TypeDef *ADCx, const stc_adc_ch_cfg_t *pstcChCfg);
 en_result_t ADC_DelAdcChannel(M4_ADC_TypeDef *ADCx, const stc_adc_ch_cfg_t *pstcChCfg);
@@ -524,7 +510,7 @@ uint32_t ADC_GetAwdFlag(const M4_ADC_TypeDef *ADCx);
 void ADC_ClrAwdFlag(M4_ADC_TypeDef *ADCx);
 void ADC_ClrAwdChFlag(M4_ADC_TypeDef *ADCx, uint32_t u32AwdCh);
 
-en_result_t ADC_ChannelRemap(M4_ADC_TypeDef *ADCx, uint32_t u32DestChannel, uint8_t u8AdcPin);
+en_result_t ADC_ChannleRemap(M4_ADC_TypeDef *ADCx, uint32_t u32DestChannel, uint8_t u8AdcPin);
 uint8_t ADC_GetChannelPinNum(const M4_ADC_TypeDef *ADCx, uint8_t u8ChIndex);
 
 //@} // AdcGroup

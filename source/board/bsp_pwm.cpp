@@ -22,7 +22,7 @@ void hal_fan_pwm_init(uint8_t fan)
 
     /* Configuration peripheral clock */
     PWC_Fcg2PeriphClockCmd(PWC_FCG2_PERIPH_TIMA2 | PWC_FCG2_PERIPH_TIMA3 | PWC_FCG2_PERIPH_TIMA4, Enable);
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
 
     M4_TMRA_TypeDef *tim_base;
     en_timera_channel_t tim_ch;
@@ -164,7 +164,7 @@ void beep_pwm_init(void)
 
     /* Configuration peripheral clock */
     PWC_Fcg2PeriphClockCmd(PWC_FCG2_PERIPH_TIMA3, Enable);
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
 
     PORT_SetFunc(BOARD_PWM_CH3_PORT, BOARD_PWM_CH3_PIN, BOARD_PWM_CH3_FUNC, Disable);
 

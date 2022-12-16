@@ -48,8 +48,8 @@
  **   - 2018-10-20  1.0 Hongjh First version for Device Driver Library of MPU.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_MPU_H__
-#define __HC32F46X_MPU_H__
+#ifndef __HC32F46x_MPU_H__
+#define __HC32F46x_MPU_H__
 
 /*******************************************************************************
  * Include files
@@ -319,7 +319,7 @@ en_result_t MPU_IpProtCmd(uint32_t u32ProtMode,
 
 #endif /* DDL_MPU_ENABLE */
 
-#endif /* __HC32F46X_MPU_H__ */
+#endif /* __HC32F46x_MPU_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

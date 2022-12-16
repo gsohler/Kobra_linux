@@ -207,18 +207,6 @@ typedef enum en_dma_ch_flag
 
 /**
  *******************************************************************************
- ** \brief  DMA common trigger source select
- **
- ******************************************************************************/
-typedef enum en_dma_com_trigger
-{
-    DmaComTrigger_1   = 0x1,            ///< Select common trigger 1.
-    DmaComTrigger_2   = 0x2,            ///< Select common trigger 2.
-    DmaComTrigger_1_2 = 0x3,            ///< Select common trigger 1 and 2.
-} en_dma_com_trigger_t;
-
-/**
- *******************************************************************************
  ** \brief DMA llp descriptor
  **
  ******************************************************************************/
@@ -289,6 +277,8 @@ typedef struct stc_dma_recfg_ctl
 {
     uint16_t                    u16SrcRptBSize; ///< The source repeat size.
     uint16_t                    u16DesRptBSize; ///< The destination repeat size.
+    en_functional_state_t       enReCfgLlp;     ///< Enable llp re_config function or not.
+    en_dma_channel_t            enReCfgCh;      ///< DMA re_config channel.
     en_dma_recfg_saddr_mode_t   enSaddrMd;      ///< DMA re_config source address mode.
     en_dma_recfg_daddr_mode_t   enDaddrMd;      ///< DMA re_config destination address mode.
     en_dma_recfg_cnt_mode_t     enCntMd;        ///< DMA re_config count mode.
@@ -372,9 +362,6 @@ en_result_t DMA_SetLLP(M4_DMA_TypeDef* pstcDmaReg, uint8_t u8Ch, uint32_t u32Poi
 
 void DMA_SetTriggerSrc(const M4_DMA_TypeDef* pstcDmaReg, uint8_t u8Ch, en_event_src_t enSrc);
 void DMA_SetReConfigTriggerSrc(en_event_src_t enSrc);
-void DMA_ComTriggerCmd(M4_DMA_TypeDef* pstcDmaReg,  uint8_t u8Ch, en_dma_com_trigger_t enComTrigger, en_functional_state_t enNewState);
-void DMA_ReConfigComTriggerCmd(en_dma_com_trigger_t enComTrigger, en_functional_state_t enNewState);
-
 void DMA_ChannelCfg(M4_DMA_TypeDef* pstcDmaReg, uint8_t u8Ch, const stc_dma_ch_cfg_t* pstcChCfg);
 void DMA_InitChannel(M4_DMA_TypeDef* pstcDmaReg, uint8_t u8Ch, const stc_dma_config_t* pstcDmaCfg);
 void DMA_DeInit(M4_DMA_TypeDef* pstcDmaReg, uint8_t u8Ch);

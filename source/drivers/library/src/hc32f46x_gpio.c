@@ -605,9 +605,10 @@ en_result_t PORT_SetBits(en_port_t enPort, uint16_t u16Pin)
     /* parameter check */
     DDL_ASSERT(IS_VALID_PORT(enPort));
 
-    POSRx = (uint16_t *)((uint32_t)(&M4_PORT->POSRA) + ((uint32_t)enPort<<4));
+    POSRx = (uint16_t *)((uint32_t)(&M4_PORT->POSRA) + 0x10u * enPort);
     *POSRx |= u16Pin;
     return Ok;
+
 }
 
 /**

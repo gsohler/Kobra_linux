@@ -48,8 +48,8 @@
  **   - 2018-11-22  1.0  yangjp First version for Device Driver Library of RTC.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_RTC_H__
-#define __HC32F46X_RTC_H__
+#ifndef __HC32F46x_RTC_H__
+#define __HC32F46x_RTC_H__
 
 /*******************************************************************************
  * Include files
@@ -300,7 +300,7 @@ en_result_t RTC_ClearAlarmFlag(void);
 
 #endif /* DDL_RTC_ENABLE */
 
-#endif /* __HC32F46X_RTC_H__ */
+#endif /* __HC32F46x_RTC_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

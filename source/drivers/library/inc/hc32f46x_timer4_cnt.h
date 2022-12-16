@@ -49,8 +49,8 @@
  **                     Timer4CNT.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_TIMER4_CNT_H__
-#define __HC32F46X_TIMER4_CNT_H__
+#ifndef __HC32F46x_TIMER4_CNT_H__
+#define __HC32F46x_TIMER4_CNT_H__
 
 /*******************************************************************************
  * Include files
@@ -237,7 +237,7 @@ en_timer4_cnt_int_mask_t TIMER4_CNT_GetIntMaskTimes(M4_TMR4_TypeDef *TMR4x,
 
 #endif /* DDL_TIMER4_CNT_ENABLE */
 
-#endif /* __HC32F46X_TIMER4_CNT_H__ */
+#endif /* __HC32F46x_TIMER4_CNT_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

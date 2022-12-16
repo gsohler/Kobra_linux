@@ -226,6 +226,11 @@ void CardReader::selectByIndex(SdFile dir, const uint8_t index) {
 //
 // Get file/folder info for an item by name
 //
+int strcasecmp(const char *str1,const char *str2)
+{
+	return strcmp(str1, str2); // TODO fix
+}
+
 void CardReader::selectByName(SdFile dir, const char * const match) {
   dir_t p;
   for (uint8_t cnt = 0; dir.readDir(&p, longFilename) > 0; cnt++) {

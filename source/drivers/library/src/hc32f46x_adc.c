@@ -45,7 +45,7 @@
  ** A detailed description is available at
  ** @link AdcGroup Adc description @endlink
  **
- **   - 2018-11-30  1.0 Wuze First version for Device Driver Library of Adc.
+ **   - 2018-11-30  1.0 First version for Device Driver Library of Adc.
  **
  ******************************************************************************/
 
@@ -128,12 +128,6 @@
     ((SEL) == AdcTrgsel_TRGX1)                  ||                              \
     ((SEL) == AdcTrgsel_TRGX0_TRGX1))
 
-/*! Parameter validity check for ADC common trigger. */
-#define IS_ADC_COM_TRIGGER(x)                                                   \
-(   ((x) == AdcComTrigger_1)                    ||                              \
-    ((x) == AdcComTrigger_2)                    ||                              \
-    ((x) == AdcComTrigger_1_2))
-
 /*! Parameter validity check for ADC EOCAIEN/ENCBIEN. */
 #define IS_ADC_EOCIEN(EN)                                                       \
 (   ((EN) == AdcEocien_Disable)                 ||                              \
@@ -211,7 +205,7 @@
     (((x) >= EVT_TMRA1_OVF) && ((x) <= EVT_TMRA5_CMP))              ||          \
     (((x) >= EVT_TMRA6_OVF) && ((x) <= EVT_TMRA6_CMP))              ||          \
     (((x) >= EVT_USART1_EI) && ((x) <= EVT_USART4_RTO))             ||          \
-    (((x) >= EVT_SPI1_SPRI) && ((x) <= EVT_AOS_STRG))               ||          \
+    (((x) >= EVT_SPI1_SRRI) && ((x) <= EVT_AOS_STRG))               ||          \
     (((x) >= EVT_TMR41_SCMUH) && ((x) <= EVT_TMR42_SCMWL))          ||          \
     (((x) >= EVT_TMR43_SCMUH) && ((x) <= EVT_TMR43_SCMWL))          ||          \
     (((x) >= EVT_EVENT_PORT1)  && ((x) <= EVT_EVENT_PORT4))         ||          \
@@ -220,7 +214,7 @@
     (((x) >= EVT_I2S3_TXIRQOUT)  && ((x) <= EVT_I2S3_RXIRQOUT))     ||          \
     (((x) >= EVT_I2S4_TXIRQOUT)  && ((x) <= EVT_I2S4_RXIRQOUT))     ||          \
     (((x) >= EVT_ACMP1)  && ((x) <= EVT_ACMP3))                     ||          \
-    (((x) >= EVT_I2C1_RXI) && ((x) <= EVT_I2C3_EEI))                ||          \
+    (((x) >= EVT_I2C1_RXI) && ((x) <= EVT_I2C3_EE1))                ||          \
     (((x) >= EVT_PVD_PVD1) && ((x) <= EVT_OTS))                     ||          \
     ((x)  == EVT_WDT_REFUDF)                                        ||          \
     (((x) >= EVT_ADC1_EOCA) && ((x) <= EVT_TRNG_END))               ||          \
@@ -413,9 +407,8 @@ en_result_t ADC_SetScanMode(M4_ADC_TypeDef *ADCx, en_adc_scan_mode_t enMode)
 en_result_t ADC_ConfigTriggerSrc(M4_ADC_TypeDef *ADCx,
                                  const stc_adc_trg_cfg_t *pstcTrgCfg)
 {
-    uint32_t u32TrgSelR;
-    __IO uint32_t *io32AdcxTrgSelR0;
-    __IO uint32_t *io32AdcxTrgSelR1;
+    __IO uint32_t *io32AdcxTrgSelR0 = NULL;
+    __IO uint32_t *io32AdcxTrgSelR1 = NULL;
     en_result_t enRet = ErrorInvalidParameter;
 
     if ((NULL != ADCx)          &&
@@ -424,50 +417,76 @@ en_result_t ADC_ConfigTriggerSrc(M4_ADC_TypeDef *ADCx,
     {
         DDL_ASSERT(IS_ADC_PERIPH(ADCx));
         DDL_ASSERT(IS_ADC_TRGSEL(pstcTrgCfg->enTrgSel));
+        enRet = Ok;
+#ifdef __DEBUG
+        switch (pstcTrgCfg->enTrgSel)
+        {
+            case AdcTrgsel_ADTRGX:
+                break;
 
-        if (ADC_SEQ_A == pstcTrgCfg->u8Sequence)
-        {
-            ADCx->TRGSR_f.TRGSELA = pstcTrgCfg->enTrgSel;
-        }
-        else
-        {
-            ADCx->TRGSR_f.TRGSELB = pstcTrgCfg->enTrgSel;
-        }
+            case AdcTrgsel_TRGX0:
+                DDL_ASSERT(IS_ADC_TRIG_SRC_EVENT(pstcTrgCfg->enInTrg0));
+                break;
 
-        if (AdcTrgsel_ADTRGX != pstcTrgCfg->enTrgSel)
+            case AdcTrgsel_TRGX1:
+                DDL_ASSERT(IS_ADC_TRIG_SRC_EVENT(pstcTrgCfg->enInTrg1));
+                break;
+
+            case AdcTrgsel_TRGX0_TRGX1:
+                DDL_ASSERT(IS_ADC_TRIG_SRC_EVENT(pstcTrgCfg->enInTrg0));
+                DDL_ASSERT(IS_ADC_TRIG_SRC_EVENT(pstcTrgCfg->enInTrg1));
+                break;
+
+            default:
+                enRet = ErrorInvalidParameter;
+                break;
+        }
+        if (Ok == enRet)
+#endif /* #ifdef __DEBUG */
         {
-            if (M4_ADC1 == ADCx)
+            if (ADC_SEQ_A == pstcTrgCfg->u8Sequence)
             {
-                io32AdcxTrgSelR0 = &(M4_AOS->ADC1_ITRGSELR0);
-                io32AdcxTrgSelR1 = &(M4_AOS->ADC1_ITRGSELR1);
+                ADCx->TRGSR_f.TRGSELA = pstcTrgCfg->enTrgSel;
             }
             else
             {
-                io32AdcxTrgSelR0 = &(M4_AOS->ADC2_ITRGSELR0);
-                io32AdcxTrgSelR1 = &(M4_AOS->ADC2_ITRGSELR1);
+                ADCx->TRGSR_f.TRGSELB = pstcTrgCfg->enTrgSel;
             }
 
-            if ((pstcTrgCfg->enTrgSel & AdcTrgsel_TRGX0) == AdcTrgsel_TRGX0)
+            if (AdcTrgsel_ADTRGX != pstcTrgCfg->enTrgSel)
             {
-                DDL_ASSERT(IS_ADC_TRIG_SRC_EVENT(pstcTrgCfg->enInTrg0));
+                if (M4_ADC1 == ADCx)
+                {
+                    io32AdcxTrgSelR0 = &(M4_AOS->ADC1_ITRGSELR0);
+                    io32AdcxTrgSelR1 = &(M4_AOS->ADC1_ITRGSELR1);
+                }
+                else
+                {
+                    io32AdcxTrgSelR0 = &(M4_AOS->ADC2_ITRGSELR0);
+                    io32AdcxTrgSelR1 = &(M4_AOS->ADC2_ITRGSELR1);
+                }
 
-                u32TrgSelR  = *io32AdcxTrgSelR0;
-                u32TrgSelR &= ~0x1FFul;
-                u32TrgSelR |= pstcTrgCfg->enInTrg0;
-                *io32AdcxTrgSelR0 = u32TrgSelR;
-            }
-            if ((pstcTrgCfg->enTrgSel & AdcTrgsel_TRGX1) == AdcTrgsel_TRGX1)
-            {
-                DDL_ASSERT(IS_ADC_TRIG_SRC_EVENT(pstcTrgCfg->enInTrg1));
+                switch (pstcTrgCfg->enTrgSel)
+                {
+                    case AdcTrgsel_TRGX0:
+                        *io32AdcxTrgSelR0 = pstcTrgCfg->enInTrg0;
+                        break;
 
-                u32TrgSelR  = *io32AdcxTrgSelR1;
-                u32TrgSelR &= ~0x1FFul;
-                u32TrgSelR |= pstcTrgCfg->enInTrg1;
-                *io32AdcxTrgSelR1 = u32TrgSelR;
+                    case AdcTrgsel_TRGX1:
+                        *io32AdcxTrgSelR1 = pstcTrgCfg->enInTrg1;
+                        break;
+
+                    case AdcTrgsel_TRGX0_TRGX1:
+                        *io32AdcxTrgSelR0 = pstcTrgCfg->enInTrg0;
+                        *io32AdcxTrgSelR1 = pstcTrgCfg->enInTrg1;
+                        break;
+
+                    default:
+                        enRet = ErrorInvalidParameter;
+                        break;
+                }
             }
         }
-
-        enRet = Ok;
     }
 
     return enRet;
@@ -517,71 +536,6 @@ en_result_t ADC_TriggerSrcCmd(M4_ADC_TypeDef *ADCx,
 
 /**
  *******************************************************************************
- ** \brief Enable or disable ADC common trigger.
- **
- ** \param [in] ADCx                    Pointer to ADC instance register base.
- ** \arg M4_ADC1                        ADC unit 1 instance register base.
- ** \arg M4_ADC2                        ADC unit 2 instance register base.
- **
- ** \param [in] enTrgSel                ADC trigger source type. See @ref en_adc_trgsel_t for details.
- **
- ** \param [in] enComTrigger            ADC common trigger selection. See @ref en_adc_com_trigger_t for details.
- **
- ** \param [in] enState                 Enable or disable the specified common trigger.
- **
- ** \retval None.
- **
- ******************************************************************************/
-void ADC_ComTriggerCmd(M4_ADC_TypeDef *ADCx, en_adc_trgsel_t enTrgSel, \
-                       en_adc_com_trigger_t enComTrigger, en_functional_state_t enState)
-{
-    uint32_t u32ComTrig = enComTrigger;
-    uint32_t u32ITRGSELRAddr;
-
-    DDL_ASSERT(IS_ADC_PERIPH(ADCx));
-    DDL_ASSERT(IS_ADC_TRGSEL(enTrgSel) && (enTrgSel != AdcTrgsel_ADTRGX));
-    DDL_ASSERT(IS_ADC_COM_TRIGGER(enComTrigger));
-    DDL_ASSERT(IS_FUNCTIONAL_STATE(enState));
-
-    if (M4_ADC1 == ADCx)
-    {
-        u32ITRGSELRAddr = (uint32_t)&M4_AOS->ADC1_ITRGSELR0;
-    }
-    else
-    {
-        u32ITRGSELRAddr = (uint32_t)&M4_AOS->ADC2_ITRGSELR0;
-    }
-
-    u32ComTrig <<= 30u;
-
-    if ((enTrgSel & AdcTrgsel_TRGX0) == AdcTrgsel_TRGX0)
-    {
-        if (enState == Enable)
-        {
-            *(__IO uint32_t *)u32ITRGSELRAddr |= u32ComTrig;
-        }
-        else
-        {
-            *(__IO uint32_t *)u32ITRGSELRAddr &= ~u32ComTrig;
-        }
-    }
-
-    if ((enTrgSel & AdcTrgsel_TRGX1) == AdcTrgsel_TRGX1)
-    {
-        u32ITRGSELRAddr += 4ul;
-        if (enState == Enable)
-        {
-            *(__IO uint32_t *)u32ITRGSELRAddr |= u32ComTrig;
-        }
-        else
-        {
-            *(__IO uint32_t *)u32ITRGSELRAddr &= ~u32ComTrig;
-        }
-    }
-}
-
-/**
- *******************************************************************************
  ** \brief Add ADC channel.
  **
  ** \param [in] ADCx                    Pointer to ADC instance register base.
@@ -603,7 +557,7 @@ void ADC_ComTriggerCmd(M4_ADC_TypeDef *ADCx, en_adc_trgsel_t enTrgSel, \
  ******************************************************************************/
 en_result_t ADC_AddAdcChannel(M4_ADC_TypeDef *ADCx, const stc_adc_ch_cfg_t *pstcChCfg)
 {
-    en_result_t enRet = ErrorInvalidParameter;
+	en_result_t enRet = ErrorInvalidParameter;
     uint8_t      i;
     uint8_t      j;
     uint32_t     u32ChannelSel;
@@ -613,51 +567,51 @@ en_result_t ADC_AddAdcChannel(M4_ADC_TypeDef *ADCx, const stc_adc_ch_cfg_t *pstc
         (NULL != pstcChCfg) &&
         (pstcChCfg->u8Sequence <= ADC_SEQ_B))
     {
-        DDL_ASSERT(IS_ADC_PERIPH(ADCx));
+	    DDL_ASSERT(IS_ADC_PERIPH(ADCx));
 
-        if (M4_ADC1 == ADCx)
-        {
-            u32ChannelSel = pstcChCfg->u32Channel & ADC1_CH_ALL;
-            if (ADC_SEQ_A == pstcChCfg->u8Sequence)
-            {
-                ADCx->CHSELRA0 |= (uint16_t)u32ChannelSel;
-                ADCx->CHSELRA1 |= (uint16_t)(u32ChannelSel >> 16u);
-            }
-            else
-            {
-                ADCx->CHSELRB0 |= (uint16_t)u32ChannelSel;
-                ADCx->CHSELRB1 |= (uint16_t)(u32ChannelSel >> 16u);
-            }
-        }
-        else
-        {
-            u32ChannelSel = pstcChCfg->u32Channel & ADC2_CH_ALL;
-            if (ADC_SEQ_A == pstcChCfg->u8Sequence)
-            {
-                ADCx->CHSELRA0 |= (uint16_t)u32ChannelSel;
-            }
-            else
-            {
-                ADCx->CHSELRB0 |= (uint16_t)u32ChannelSel;
-            }
-        }
+	    if (M4_ADC1 == ADCx)
+	    {
+	        u32ChannelSel = pstcChCfg->u32Channel & ADC1_CH_ALL;
+	        if (ADC_SEQ_A == pstcChCfg->u8Sequence)
+	        {
+	            ADCx->CHSELRA0 |= (uint16_t)u32ChannelSel;
+	            ADCx->CHSELRA1 |= (uint16_t)(u32ChannelSel >> 16u);
+	        }
+	        else
+	        {
+	            ADCx->CHSELRB0 |= (uint16_t)u32ChannelSel;
+	            ADCx->CHSELRB1 |= (uint16_t)(u32ChannelSel >> 16u);
+	        }
+	    }
+	    else
+	    {
+	        u32ChannelSel = pstcChCfg->u32Channel & ADC2_CH_ALL;
+	        if (ADC_SEQ_A == pstcChCfg->u8Sequence)
+	        {
+	            ADCx->CHSELRA0 |= (uint16_t)u32ChannelSel;
+	        }
+	        else
+	        {
+	            ADCx->CHSELRB0 |= (uint16_t)u32ChannelSel;
+	        }
+	    }
 
-        /* Set sampling time */
-        i = 0u;
-        j = 0u;
-        io8Sstr = &(ADCx->SSTR0);
-        while (0u != u32ChannelSel)
-        {
-            if (u32ChannelSel & 0x1ul)
-            {
-                io8Sstr[i] = pstcChCfg->pu8SampTime[j++];
-            }
-            u32ChannelSel >>= 1u;
-            i++;
-        }
+	    /* Set sampling time */
+	    i = 0u;
+	    j = 0u;
+	    io8Sstr = &(ADCx->SSTR0);
+	    while (0u != u32ChannelSel)
+	    {
+	        if (u32ChannelSel & 0x1ul)
+	        {
+	            io8Sstr[i] = pstcChCfg->pu8SampTime[j++];
+	        }
+	        u32ChannelSel >>= 1u;
+	        i++;
+	    }
 
-        enRet = Ok;
-    }
+		enRet = Ok;
+	}
 
     return enRet;
 }
@@ -685,7 +639,7 @@ en_result_t ADC_AddAdcChannel(M4_ADC_TypeDef *ADCx, const stc_adc_ch_cfg_t *pstc
  ******************************************************************************/
 en_result_t ADC_DelAdcChannel(M4_ADC_TypeDef *ADCx, const stc_adc_ch_cfg_t *pstcChCfg)
 {
-    en_result_t enRet = ErrorInvalidParameter;
+	en_result_t enRet = ErrorInvalidParameter;
     uint16_t    u16ChSelR0;
     uint16_t    u16ChSelR1;
 
@@ -693,22 +647,22 @@ en_result_t ADC_DelAdcChannel(M4_ADC_TypeDef *ADCx, const stc_adc_ch_cfg_t *pstc
         (NULL != pstcChCfg) &&
         (pstcChCfg->u8Sequence <= ADC_SEQ_B))
     {
-        DDL_ASSERT(IS_ADC_PERIPH(ADCx));
+	    DDL_ASSERT(IS_ADC_PERIPH(ADCx));
 
-        u16ChSelR0 = (uint16_t)(pstcChCfg->u32Channel);
-        u16ChSelR1 = (uint16_t)(pstcChCfg->u32Channel >> 16u);
+	    u16ChSelR0 = (uint16_t)(pstcChCfg->u32Channel);
+	    u16ChSelR1 = (uint16_t)(pstcChCfg->u32Channel >> 16u);
 
-        ADCx->CHSELRA0 &= (uint16_t)(~u16ChSelR0);
-        ADCx->CHSELRB0 &= (uint16_t)(~u16ChSelR0);
+	    ADCx->CHSELRA0 &= (uint16_t)(~u16ChSelR0);
+	    ADCx->CHSELRB0 &= (uint16_t)(~u16ChSelR0);
 
-        if (M4_ADC1 == ADCx)
-        {
-            ADCx->CHSELRA1 &= (uint16_t)(~u16ChSelR1);
-            ADCx->CHSELRB1 &= (uint16_t)(~u16ChSelR1);
-        }
+	    if (M4_ADC1 == ADCx)
+	    {
+	        ADCx->CHSELRA1 &= (uint16_t)(~u16ChSelR1);
+	        ADCx->CHSELRB1 &= (uint16_t)(~u16ChSelR1);
+	    }
 
-        enRet = Ok;
-    }
+		enRet = Ok;
+	}
 
     return enRet;
 }
@@ -733,28 +687,28 @@ en_result_t ADC_SeqITCmd(M4_ADC_TypeDef *ADCx,
                          uint8_t u8Seq,
                          en_functional_state_t enState)
 {
-    en_result_t enRet = ErrorInvalidParameter;
+	en_result_t enRet = ErrorInvalidParameter;
     uint8_t u8Msk = 0u;
 
     if ((NULL != ADCx) && (u8Seq <= ADC_SEQ_B))
     {
-        DDL_ASSERT(IS_ADC_PERIPH(ADCx));
-        DDL_ASSERT(IS_FUNCTIONAL_STATE(enState));
+	    DDL_ASSERT(IS_ADC_PERIPH(ADCx));
+	    DDL_ASSERT(IS_FUNCTIONAL_STATE(enState));
 
-        u8Msk = (uint8_t)(0x1ul << u8Seq);
-        ADCx->ISR &= (uint8_t)(~u8Msk);
+	    u8Msk = (uint8_t)(0x1ul << u8Seq);
+	    ADCx->ISR &= (uint8_t)(~u8Msk);
 
-        if (Enable == enState)
-        {
-            ADCx->ICR |= u8Msk;
-        }
-        else
-        {
-            ADCx->ICR &= (uint8_t)(~u8Msk);
-        }
+	    if (Enable == enState)
+	    {
+	        ADCx->ICR |= u8Msk;
+	    }
+	    else
+	    {
+	        ADCx->ICR &= (uint8_t)(~u8Msk);
+	    }
 
-        enRet = Ok;
-    }
+		enRet = Ok;
+	}
 
     return enRet;
 }
@@ -1073,7 +1027,8 @@ en_result_t ADC_DelAwdChannel(M4_ADC_TypeDef *ADCx, uint32_t u32Channel)
  ** \param [in] enFactor                PGA gain factor.
  ** \param [in] enNegativeIn            PGA negative input select.
  **
- ** \retval None.
+ ** \retval ErrorInvalidParameter       Parameter error.
+ ** \retval Ok                          No error occurred.
  **
  ** \note                               Only ADC1 has PGA.
  **
@@ -1149,7 +1104,8 @@ void ADC_DelPgaChannel(uint32_t u32Channel)
  ** \param [in] enMode                  Synchronous mode types.
  ** \param [in] u8TrgDelay              ADC2 trigger delay time.
  **
- ** \retval None.
+ ** \retval ErrorInvalidParameter       Parameter error.
+ ** \retval Ok                          No error occurred.
  **
  ******************************************************************************/
 void ADC_ConfigSync(en_adc_sync_mode_t enMode, uint8_t u8TrgDelay)
@@ -1254,7 +1210,7 @@ en_result_t ADC_StopConvert(M4_ADC_TypeDef *ADCx)
  ** \arg M4_ADC1                        ADC unit 1 instance register base.
  ** \arg M4_ADC2                        ADC unit 2 instance register base.
  **
- ** \param [in] u8Seq                   The sequence which you want to get
+ ** \param [in] u8Seq                   The sequence which you want to get.
  **                                     it's conversion status flag.
  **
  ** \retval Set                         ADC converted done.
@@ -1382,7 +1338,7 @@ en_result_t ADC_PollingSa(M4_ADC_TypeDef *ADCx,
         enRet         = ErrorTimeout;
         while (u32TimeCount < u32AdcTimeout)
         {
-            if (ADCx->ISR_f.EOCAF)
+            if (bM4_ADC1_ISR_EOCAF)
             {
                 /* Get ADC data. */
                 if (u8AllDataLength)
@@ -1395,7 +1351,7 @@ en_result_t ADC_PollingSa(M4_ADC_TypeDef *ADCx,
                 }
 
                 /* Clear sequence A flag. */
-                ADCx->ISR_f.EOCAF = 0u;
+                bM4_ADC1_ISR_EOCAF = 0u;
                 enRet = Ok;
                 break;
             }
@@ -1575,8 +1531,6 @@ uint32_t ADC_GetAwdFlag(const M4_ADC_TypeDef *ADCx)
  ** \arg M4_ADC1                        ADC unit 1 instance register base.
  ** \arg M4_ADC2                        ADC unit 2 instance register base.
  **
- ** \retval None.
- **
  ******************************************************************************/
 void ADC_ClrAwdFlag(M4_ADC_TypeDef *ADCx)
 {
@@ -1603,7 +1557,6 @@ void ADC_ClrAwdFlag(M4_ADC_TypeDef *ADCx)
  **
  ** \param [in] u32AwdCh                The channel(s) which you want to clear it's flag(s).
  **
- ** \retval None.
  **
  ******************************************************************************/
 void ADC_ClrAwdChFlag(M4_ADC_TypeDef *ADCx, uint32_t u32AwdCh)
@@ -1642,7 +1595,7 @@ void ADC_ClrAwdChFlag(M4_ADC_TypeDef *ADCx, uint32_t u32AwdCh)
  ** \retval Ok                          No error occurred.
  **
  ******************************************************************************/
-en_result_t ADC_ChannelRemap(M4_ADC_TypeDef *ADCx,
+en_result_t ADC_ChannleRemap(M4_ADC_TypeDef *ADCx,
                              uint32_t u32DestChannel,
                              uint8_t u8AdcPin)
 {

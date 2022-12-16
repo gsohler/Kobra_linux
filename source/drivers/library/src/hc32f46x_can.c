@@ -78,7 +78,6 @@ do{                                                                             
 }while(M4_CAN->CFG_STAT_f.RESET);                                               \
 }while(0)
 
-#define CAN_RW_MEM32(addr)                  (*(__IO uint32_t *)(addr))
 
 #define CAN_ACF_ID_REG_SEL                  ((uint8_t)0x00u)
 #define CAN_ACF_MASK_REG_SEL                ((uint8_t)0x01u)
@@ -307,16 +306,13 @@ void CAN_FilterConfig(const stc_can_filter_t *pstcFilter, en_functional_state_t 
  ******************************************************************************/
 void CAN_SetFrame(stc_can_txframe_t *pstcTxFrame)
 {
-    uint32_t u32TBUFAddr;
-
     if(NULL != pstcTxFrame)
     {
-        u32TBUFAddr = (uint32_t)&M4_CAN->TBUF;
         M4_CAN->TCMD_f.TBSEL = pstcTxFrame->enBufferSel;
-        CAN_RW_MEM32(u32TBUFAddr)    = pstcTxFrame->TBUF32_0;
-        CAN_RW_MEM32(u32TBUFAddr+4)  = pstcTxFrame->TBUF32_1;
-        CAN_RW_MEM32(u32TBUFAddr+8)  = pstcTxFrame->TBUF32_2[0];
-        CAN_RW_MEM32(u32TBUFAddr+12) = pstcTxFrame->TBUF32_2[1];
+        M4_CAN->TBUF0 = pstcTxFrame->TBUF32_0;
+        M4_CAN->TBUF1 = pstcTxFrame->TBUF32_1;
+        M4_CAN->TBUF2 = pstcTxFrame->TBUF32_2[0];
+        M4_CAN->TBUF3 = pstcTxFrame->TBUF32_2[1];
 
         if(CanSTBSel == pstcTxFrame->enBufferSel)
         {
@@ -359,15 +355,12 @@ en_can_tx_buf_status_t CAN_TransmitCmd(en_can_tx_cmd_t enTxCmd)
  ******************************************************************************/
 en_can_rx_buf_status_t CAN_Receive(stc_can_rxframe_t *pstcRxFrame)
 {
-    uint32_t u32RBUFAddr;
-
     if(NULL != pstcRxFrame)
     {
-        u32RBUFAddr = (uint32_t)&M4_CAN->RBUF;
-        pstcRxFrame->RBUF32_0    = CAN_RW_MEM32(u32RBUFAddr);
-        pstcRxFrame->RBUF32_1    = CAN_RW_MEM32(u32RBUFAddr+4);
-        pstcRxFrame->RBUF32_2[0] = CAN_RW_MEM32(u32RBUFAddr+8);
-        pstcRxFrame->RBUF32_2[1] = CAN_RW_MEM32(u32RBUFAddr+12);
+        pstcRxFrame->RBUF32_0    = M4_CAN->RBUF0;
+        pstcRxFrame->RBUF32_1    = M4_CAN->RBUF1;
+        pstcRxFrame->RBUF32_2[0] = M4_CAN->RBUF2;
+        pstcRxFrame->RBUF32_2[1] = M4_CAN->RBUF3;
 
         M4_CAN->RCTRL_f.RREL = 1u;
     }
@@ -496,13 +489,13 @@ bool CAN_IrqFlgGet(en_can_irq_flag_type_t enCanIrqFlgType)
 void CAN_IrqFlgClr(en_can_irq_flag_type_t enCanIrqFlgType)
 {
     volatile uint32_t *u32pIE = NULL;
-    uint32_t u32IETempMsk = 0xFF2A00FF;
 
     DDL_ASSERT(IS_CAN_IRQ_FLAG_VALID(enCanIrqFlgType));
 
     u32pIE = (volatile uint32_t*)(&M4_CAN->RTIE);
 
-    *u32pIE = (((*u32pIE)&u32IETempMsk) | (uint32_t)enCanIrqFlgType);
+    *u32pIE |= enCanIrqFlgType;
+
 }
 
 

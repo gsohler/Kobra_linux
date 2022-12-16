@@ -395,6 +395,11 @@ SetSRAM3Wait:
 /*
 ;<h> Default handler start.
 */
+                .section    .text.Default_Handler, "ax", %progbits
+                .align      2
+Default_Handler:
+                b           .
+                .size       Default_Handler, . - Default_Handler
 /*
 ;<h> Default handler end.
 */

@@ -49,8 +49,8 @@
  **
  ******************************************************************************/
 
-#ifndef __HC32F46X_TIMER0_H__
-#define __HC32F46X_TIMER0_H__
+#ifndef __HC32F46x_TIMER0_H__
+#define __HC32F46x_TIMER0_H__
 
 /*******************************************************************************
  * Include files
@@ -152,17 +152,6 @@ typedef enum en_tim0_clock_div
     Tim0_ClkDiv1024
 }en_tim0_clock_div_t;
 
-/**
- *******************************************************************************
- ** \brief Timer0 common trigger source select enumeration
- **
- ******************************************************************************/
-typedef enum en_tim0_com_trigger
-{
-    Tim0ComTrigger_1   = 1u,                 ///< Select common trigger 1.
-    Tim0ComTrigger_2   = 2u,                 ///< Select common trigger 2.
-    Tim0ComTrigger_1_2 = 3u,                 ///< Select common trigger 1 and 2.
-} en_tim0_com_trigger_t;
 
 /**
  *******************************************************************************
@@ -225,7 +214,6 @@ en_result_t TIMER0_DeInit(M4_TMR0_TypeDef* pstcTim0Reg,en_tim0_channel_t enCh);
 en_result_t TIMER0_HardTriggerInit(M4_TMR0_TypeDef* pstcTim0Reg,en_tim0_channel_t enCh,
                                 const stc_tim0_trigger_init_t* pStcInit);
 void TIMER0_SetTriggerSrc(en_event_src_t enEvent);
-void TIMER0_ComTriggerCmd(en_tim0_com_trigger_t enComTrigger, en_functional_state_t enState);
 
 //@} // Timer0Group
 
@@ -235,7 +223,7 @@ void TIMER0_ComTriggerCmd(en_tim0_com_trigger_t enComTrigger, en_functional_stat
 
 #endif /* DDL_TIMER0_ENABLE */
 
-#endif /* __HC32F46X_TIMER0_H__ */
+#endif /* __HC32F46x_TIMER0_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

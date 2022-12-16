@@ -140,7 +140,7 @@
     (((x) >= EVT_TMRA1_OVF) && ((x) <= EVT_TMRA5_CMP))                 ||      \
     (((x) >= EVT_TMRA6_OVF) && ((x) <= EVT_TMRA6_CMP))                 ||      \
     (((x) >= EVT_USART1_EI) && ((x) <= EVT_USART4_RTO))                ||      \
-    (((x) >= EVT_SPI1_SPRI) && ((x) <= EVT_AOS_STRG))                  ||      \
+    (((x) >= EVT_SPI1_SRRI) && ((x) <= EVT_AOS_STRG))                  ||      \
     (((x) >= EVT_TMR41_SCMUH) && ((x) <= EVT_TMR42_SCMWL))             ||      \
     (((x) >= EVT_TMR43_SCMUH) && ((x) <= EVT_TMR43_SCMWL))             ||      \
     (((x) >= EVT_EVENT_PORT1)  && ((x) <= EVT_EVENT_PORT4))            ||      \
@@ -149,21 +149,15 @@
     (((x) >= EVT_I2S3_TXIRQOUT)  && ((x) <= EVT_I2S3_RXIRQOUT))        ||      \
     (((x) >= EVT_I2S4_TXIRQOUT)  && ((x) <= EVT_I2S4_RXIRQOUT))        ||      \
     (((x) >= EVT_ACMP1)  && ((x) <= EVT_ACMP3))                        ||      \
-    (((x) >= EVT_I2C1_RXI) && ((x) <= EVT_I2C3_EEI))                   ||      \
+    (((x) >= EVT_I2C1_RXI) && ((x) <= EVT_I2C3_EE1))                   ||      \
     (((x) >= EVT_PVD_PVD1) && ((x) <= EVT_OTS))                        ||      \
     ((x) == EVT_WDT_REFUDF)                                            ||      \
     (((x) >= EVT_ADC1_EOCA) && ((x) <= EVT_TRNG_END))                  ||      \
     (((x) >= EVT_SDIOC1_DMAR) && ((x) <= EVT_SDIOC1_DMAW))             ||      \
     (((x) >= EVT_SDIOC2_DMAR) && ((x) <= EVT_SDIOC2_DMAW)))
 
-/* Parameter validity check for common trigger. */
-#define IS_VALID_TIM0_COM_TRIGGER(x)                                           \
-(   ((x) == Tim0ComTrigger_1)                  ||                              \
-    ((x) == Tim0ComTrigger_2)                  ||                              \
-    ((x) == Tim0ComTrigger_1_2))
-
 /* Delay count for time out */
-#define TIMER0_TMOUT (0x5000ul)
+#define TIMER0_TMOUT 0x5000ul
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
  ******************************************************************************/
@@ -251,6 +245,7 @@ static void AsyncDelay(M4_TMR0_TypeDef* pstcTim0Reg, en_tim0_channel_t enCh,
     {
         for(uint32_t i=0ul; i<SystemCoreClock/10000ul; i++)
         {
+            __NOP;
         }
     }
 }
@@ -882,33 +877,6 @@ void TIMER0_SetTriggerSrc(en_event_src_t enEvent)
     DDL_ASSERT(IS_VALID_TRIG_SRC_EVENT(enEvent));
 
     M4_AOS->TMR0_HTSSR_f.TRGSEL = enEvent;
-}
-
-/**
- *******************************************************************************
- ** \brief  Enable or disable Timer0 common trigger.
- **
- ** \param [in] enComTrigger            Timer0 common trigger selection. See @ref en_tim0_com_trigger_t for details.
- ** \param [in] enState                 Enable or disable the specified common trigger.
- **
- ** \retval None
- **
- ******************************************************************************/
-void TIMER0_ComTriggerCmd(en_tim0_com_trigger_t enComTrigger, en_functional_state_t enState)
-{
-    uint32_t u32ComTrig = (uint32_t)enComTrigger;
-
-    DDL_ASSERT(IS_VALID_TIM0_COM_TRIGGER(enComTrigger));
-    DDL_ASSERT(IS_FUNCTIONAL_STATE(enState));
-
-    if (enState == Enable)
-    {
-        M4_AOS->TMR0_HTSSR |= (u32ComTrig << 30u);
-    }
-    else
-    {
-        M4_AOS->TMR0_HTSSR &= ~(u32ComTrig << 30u);
-    }
 }
 
 /**

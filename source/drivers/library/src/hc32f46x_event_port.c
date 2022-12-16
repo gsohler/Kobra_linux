@@ -111,12 +111,6 @@
     ((x) == EventPin14)                         ||                              \
     ((x) == EventPin15))
 
-/*! Parameter valid check for Event Port common trigger. */
-#define IS_EP_COM_TRIGGER(x)                                                   \
-(   ((x) == EpComTrigger_1)                     ||                              \
-    ((x) == EpComTrigger_2)                     ||                              \
-    ((x) == EpComTrigger_1_2))
-
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
  ******************************************************************************/
@@ -157,11 +151,11 @@ en_result_t EVENTPORT_Init(en_event_port_t enEventPort, uint16_t u16EventPin,  \
     uint32_t *EPRISRx;                  ///< Rising edge detect enable register
     uint32_t *EPFALx;                   ///< Falling edge detect enable register
 
-    EPDIRx = (uint32_t *)(EP1_BASE + EP1_DIR_BASE + (0x1C * enEventPort));
-    EPORRx = (uint32_t *)(EP1_BASE + EP1_ORR_BASE + (0x1C * enEventPort));
-    EPOSRx = (uint32_t *)(EP1_BASE + EP1_OSR_BASE + (0x1C * enEventPort));
-    EPRISRx= (uint32_t *)(EP1_BASE + EP1_RISR_BASE+ (0x1C * enEventPort));
-    EPFALx = (uint32_t *)(EP1_BASE + EP1_FAL_BASE + (0x1C * enEventPort));
+    EPDIRx = (uint32_t *)(EP1_BASE + EP1_DIR_BASE + 0x1C * (enEventPort - 1));
+    EPORRx = (uint32_t *)(EP1_BASE + EP1_ORR_BASE + 0x1C * (enEventPort - 1));
+    EPOSRx = (uint32_t *)(EP1_BASE + EP1_OSR_BASE + 0x1C * (enEventPort - 1));
+    EPRISRx = (uint32_t *)(EP1_BASE + EP1_RISR_BASE + 0x1C * (enEventPort - 1));
+    EPFALx = (uint32_t *)(EP1_BASE + EP1_FAL_BASE + 0x1C * (enEventPort - 1));
 
     /* Direction configure */
     if (EventPortOut == pstcEventPortInit->enDirection)
@@ -312,44 +306,6 @@ en_result_t EVENTPORT_SetTriggerSrc(en_event_port_t enEventPort,               \
         enRet = ErrorInvalidParameter;
     }
     return enRet;
-}
-
-/**
- *******************************************************************************
- ** \brief Enable or disable Event Port common trigger.
- **
- ** \param   [in]  enEventPort          Event port index, This parameter can be
- **                                     any value of @ref en_event_port_t
- ** \param   [in]  enComTrigger         Event port common trigger selection.
- **                                     See @ref en_event_port_com_trigger_t for details.
- ** \param   [in]  enState              Enable or disable the specified common trigger.
- **
- ** \retval None.
- **
- ******************************************************************************/
-void EVENTPORT_ComTriggerCmd(en_event_port_t enEventPort,                       \
-                        en_event_port_com_trigger_t enComTrigger,               \
-                        en_functional_state_t enState)
-{
-    uint32_t u32ComTrig = (uint32_t)enComTrigger;
-    __IO uint32_t *TRGSELx;
-
-    TRGSELx = (__IO uint32_t *)((uint32_t)&M4_AOS->PORT_PEVNTTRGSR12 + (4UL * ((uint32_t)enEventPort/2UL)));
-
-    if (NULL != TRGSELx)
-    {
-        DDL_ASSERT(IS_EP_COM_TRIGGER(enComTrigger));
-        DDL_ASSERT(IS_FUNCTIONAL_STATE(enState));
-
-        if (enState == Enable)
-        {
-            *TRGSELx |= (u32ComTrig << 30u);
-        }
-        else
-        {
-            *TRGSELx &= ~(u32ComTrig << 30u);
-        }
-    }
 }
 
 /**

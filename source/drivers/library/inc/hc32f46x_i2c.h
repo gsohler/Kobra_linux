@@ -49,8 +49,8 @@
  **
  ******************************************************************************/
 
-#ifndef __HC32F46X_I2C_H__
-#define __HC32F46X_I2C_H__
+#ifndef __HC32F46x_I2C_H__
+#define __HC32F46x_I2C_H__
 
 /*******************************************************************************
  * Include files
@@ -78,11 +78,23 @@ extern "C"
  ******************************************************************************/
 /**
  *******************************************************************************
+ ** \brief I2c mode enumeration
+ **
+ ******************************************************************************/
+typedef enum en_i2c_mode
+{
+    I2cMaster = 0u,         ///< I2C master mode
+    I2cSlave,              ///< I2C slave mode
+}en_i2c_mode_t;
+
+/**
+ *******************************************************************************
  ** \brief I2c configuration structure
  **
  ******************************************************************************/
 typedef struct stc_i2c_init
 {
+    en_i2c_mode_t enI2cMode; ///< I2C mode config, master or slave
     uint32_t u32Pclk3;       ///< Plck3 frequency
     uint32_t u32Baudrate;    ///< I2C baudrate config
     uint32_t u32SclTime;     ///< The SCL rising and falling time, count of T(pclk3)
@@ -126,17 +138,6 @@ typedef enum en_address_bit
 
 /**
  *******************************************************************************
- ** \brief I2c transfer direction enumeration
- **
- ******************************************************************************/
-typedef enum en_trans_direction
-{
-    I2CDirTrans = 0u,
-    I2CDirReceive = 1u,
-}en_trans_direction_t;
-
-/**
- *******************************************************************************
  ** \brief I2c clock timeout switch enumeration
  **
  ******************************************************************************/
@@ -160,16 +161,7 @@ typedef struct stc_clock_timeout_init
     uint16_t                    u16TimeOutLow;       ///< I2C clock timeout period for Low level
 }stc_clock_timeout_init_t;
 
-/**
- *******************************************************************************
- ** \brief I2c ACK config enumeration
- **
- ******************************************************************************/
-typedef enum en_i2c_ack_config
-{
-    I2c_ACK = 0u,
-    I2c_NACK = 1u,
-}en_i2c_ack_config_t;
+
 
 /*******************************************************************************
  * Global pre-processor symbols/macros ('#define')
@@ -199,8 +191,8 @@ typedef enum en_i2c_ack_config
 #define I2C_SR_RFULLF           (0x00000040ul)
 #define I2C_SR_TEMPTYF          (0x00000080ul)
 #define I2C_SR_ARLOF            (0x00000200ul)
-#define I2C_SR_ACKRF            (0x00000400ul)
-#define I2C_SR_NACKF            (0x00001000ul)
+#define I2C_SR_NACKDETECTF      (0x00000400ul)
+#define I2C_SR_NACKSENDF        (0x00001000ul)
 #define I2C_SR_TMOUTF           (0x00004000ul)
 #define I2C_SR_MSL              (0x00010000ul)
 #define I2C_SR_BUSY             (0x00020000ul)
@@ -246,33 +238,22 @@ void I2C_DigitalFilterConfig(M4_I2C_TypeDef* pstcI2Cx, en_i2c_digital_filter_mod
 void I2C_DigitalFilterCmd(M4_I2C_TypeDef* pstcI2Cx, en_functional_state_t enNewState);
 void I2C_AnalogFilterCmd(M4_I2C_TypeDef* pstcI2Cx, en_functional_state_t enNewState);
 void I2C_GeneralCallCmd(M4_I2C_TypeDef* pstcI2Cx, en_functional_state_t enNewState);
-void I2C_SlaveAdr0Config(M4_I2C_TypeDef* pstcI2Cx, en_functional_state_t enNewState, en_address_bit_t enAdrMode, uint32_t u32Adr);
-void I2C_SlaveAdr1Config(M4_I2C_TypeDef* pstcI2Cx, en_functional_state_t enNewState, en_address_bit_t enAdrMode, uint32_t u32Adr);
+void I2C_SlaveAdr0Config(M4_I2C_TypeDef* pstcI2Cx, en_functional_state_t enNewState, en_address_bit_t enAdrMode, uint8_t u8Adr);
+void I2C_SlaveAdr1Config(M4_I2C_TypeDef* pstcI2Cx, en_functional_state_t enNewState, en_address_bit_t enAdrMode, uint8_t u8Adr);
 en_result_t I2C_ClkTimeOutConfig(M4_I2C_TypeDef* pstcI2Cx, const stc_clock_timeout_init_t* pstcTimoutInit);
 void I2C_IntCmd(M4_I2C_TypeDef* pstcI2Cx, uint32_t u32IntEn, en_functional_state_t enNewState);
-void I2C_FastAckCmd(M4_I2C_TypeDef* pstcI2Cx, en_functional_state_t enNewState);
-void I2C_BusWaitCmd(M4_I2C_TypeDef* pstcI2Cx, en_functional_state_t enNewState);
+void I2C_FastAckConfig(M4_I2C_TypeDef* pstcI2Cx, en_functional_state_t enNewState);
 
 ///////////////////////////////////////////////////////////////////////////////////////
 void I2C_GenerateStart(M4_I2C_TypeDef* pstcI2Cx, en_functional_state_t enNewState);
 void I2C_GenerateReStart(M4_I2C_TypeDef* pstcI2Cx, en_functional_state_t enNewState);
 void I2C_GenerateStop(M4_I2C_TypeDef* pstcI2Cx, en_functional_state_t enNewState);
-void I2C_WriteData(M4_I2C_TypeDef* pstcI2Cx, uint8_t u8Data);
+void I2C_SendData(M4_I2C_TypeDef* pstcI2Cx, uint8_t u8Data);
 uint8_t I2C_ReadData(M4_I2C_TypeDef* pstcI2Cx);
-void I2C_AckConfig(M4_I2C_TypeDef* pstcI2Cx, en_i2c_ack_config_t u32AckConfig);
+void I2C_NackConfig(M4_I2C_TypeDef* pstcI2Cx, en_functional_state_t enNewState);
 en_flag_status_t I2C_GetStatus(M4_I2C_TypeDef* pstcI2Cx, uint32_t u32StatusBit);
+void  I2C_WriteStatus(M4_I2C_TypeDef* pstcI2Cx, uint32_t u32StatusBit, en_flag_status_t enStatus);
 void I2C_ClearStatus(M4_I2C_TypeDef* pstcI2Cx, uint32_t u32StatusBit);
-
-/* High level functions for reference ********************************/
-en_result_t I2C_Start(M4_I2C_TypeDef* pstcI2Cx, uint32_t u32Timeout);
-en_result_t I2C_Restart(M4_I2C_TypeDef* pstcI2Cx, uint32_t u32Timeout);
-en_result_t I2C_TransAddr(M4_I2C_TypeDef* pstcI2Cx, uint8_t u8Addr, en_trans_direction_t enDir, uint32_t u32Timeout);
-en_result_t I2C_Trans10BitAddr(M4_I2C_TypeDef* pstcI2Cx, uint16_t u16Addr, en_trans_direction_t enDir, uint32_t u32Timeout);
-en_result_t I2C_TransData(M4_I2C_TypeDef* pstcI2Cx, uint8_t const au8TxData[], uint32_t u32Size, uint32_t u32Timeout);
-en_result_t I2C_ReceiveData(M4_I2C_TypeDef* pstcI2Cx, uint8_t au8RxData[], uint32_t u32Size, uint32_t u32Timeout);
-en_result_t I2C_Stop(M4_I2C_TypeDef* pstcI2Cx, uint32_t u32Timeout);
-en_result_t I2C_WaitStatus(const M4_I2C_TypeDef *pstcI2Cx, uint32_t u32Flag, en_flag_status_t enStatus, uint32_t u32Timeout);
-en_result_t I2C_MasterDataReceiveAndStop(M4_I2C_TypeDef* pstcI2Cx, uint8_t au8RxData[], uint32_t u32Size, uint32_t u32Timeout);
 
 //@} // I2cGroup
 
@@ -282,7 +263,7 @@ en_result_t I2C_MasterDataReceiveAndStop(M4_I2C_TypeDef* pstcI2Cx, uint8_t au8Rx
 
 #endif /* DDL_I2C_ENABLE */
 
-#endif /* __HC32F46X_I2C_H__ */
+#endif /* __HC32F46x_I2C_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

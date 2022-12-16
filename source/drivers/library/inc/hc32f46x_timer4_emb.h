@@ -49,8 +49,8 @@
  **                     Timer4EMB.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_TIMER4_EMB_H__
-#define __HC32F46X_TIMER4_EMB_H__
+#ifndef __HC32F46x_TIMER4_EMB_H__
+#define __HC32F46x_TIMER4_EMB_H__
 
 /*******************************************************************************
  * Include files
@@ -142,7 +142,7 @@ en_timer4_emb_state_t TIMER4_EMB_GetState(const M4_TMR4_TypeDef *TMR4x);
 
 #endif /* DDL_TIMER4_EMB_ENABLE */
 
-#endif /* __HC32F46X_TIMER4_EMB_H__ */
+#endif /* __HC32F46x_TIMER4_EMB_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

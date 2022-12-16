@@ -49,8 +49,8 @@
  **                     Timer4SEVT.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_TIMER4_SEVT_H__
-#define __HC32F46X_TIMER4_SEVT_H__
+#ifndef __HC32F46x_TIMER4_SEVT_H__
+#define __HC32F46x_TIMER4_SEVT_H__
 
 /*******************************************************************************
  * Include files
@@ -248,7 +248,7 @@ uint16_t TIMER4_SEVT_ReadSCCR(M4_TMR4_TypeDef *TMR4x,
 
 #endif /* DDL_TIMER4_SEVT_ENABLE */
 
-#endif /* __HC32F46X_TIMER4_SEVT_H__ */
+#endif /* __HC32F46x_TIMER4_SEVT_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

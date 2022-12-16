@@ -48,8 +48,8 @@
  **   - 2018-10-16  1.0  yangjp First version for Device Driver Library of SWDT.
  **
  ******************************************************************************/
-#ifndef __HC32F46X_SWDT_H__
-#define __HC32F46X_SWDT_H__
+#ifndef __HC32F46x_SWDT_H__
+#define __HC32F46x_SWDT_H__
 
 /*******************************************************************************
  * Include files
@@ -112,7 +112,7 @@ en_result_t SWDT_ClearFlag(en_swdt_flag_type_t enFlag);
 
 #endif /* DDL_SWDT_ENABLE */
 
-#endif /* __HC32F46X_SWDT_H__ */
+#endif /* __HC32F46x_SWDT_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)
