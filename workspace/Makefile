@@ -107,8 +107,10 @@ DEFINES= -D__LONGLONG="long long" \
 	-D__CC_ARM \
 	-D ARM_MATH_MATRIX_CHECK \
 	-DARDUINO_ARCH_STM32 \
-	-DRAMSTART=0x1fff8000 \
-	-DRAMEND=0x1fffffff
+	-DRAMSTART=0x20000000 \
+	-DRAMEND=0x2001ffff
+
+ASMSOURCES=../source/main/hdsc32core/startup_hc32f46x.s
 
 CSOURCES=	\
 	../source/drivers/library/src/hc32f46x_adc.c \
@@ -420,6 +422,9 @@ CPPSOURCES=	\
 #	../source/Marlin/src/module/servo.cpp \
 
 MCU=cortex-m4
+
+ASFLAGS=-mcpu=$(MCU) -mtune=$(MCU) -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
+
 CFLAGS=-mcpu=$(MCU) -mtune=$(MCU) -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
 
 CPPFLAGS=-mcpu=$(MCU) -mtune=$(MCU) -mthumb -Og -fomit-frame-pointer -falign-functions=16 -ffunction-sections -fdata-sections -fno-common -flto -mfloat-abi=hard -mfpu=fpv5-d16  -Wall -Wextra -Wundef
@@ -428,7 +433,7 @@ LLIBDIR=
 RULESPATH=
 LDSCRIPT=../hc32f46x.ld
 LDOPT=
-LDFLAGS=-mcpu=$(MCU) -mthumb -Og -ggdb -fomit-frame-pointer -falign-functions=16 -flto=auto -ffunction-sections -fdata-sections -fno-common -flto -fno-use-cxa-atexit -mfloat-abi=hard -mfpu=fpv5-d16 -nostartfiles -Wl,-Map=$(OBJDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--library-path=/home/gsohler/git/,--script=$(LDSCRIPT),--gc-sections,--defsym=__process_stack_size__=0x400,--defsym=__main_stack_size__=0x400 -lnosys
+LDFLAGS=-mcpu=$(MCU) -mthumb -Og -ggdb -fomit-frame-pointer -falign-functions=16 -flto=auto -ffunction-sections -fdata-sections -fno-common -flto -fno-use-cxa-atexit -mfloat-abi=hard -mfpu=fpv5-d16 -nostartfiles -Wl,-Map=$(OBJDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--library-path=/home/gsohler/git/,--script=$(LDSCRIPT),--gc-sections,--defsym=__process_stack_size__=0x4400,--defsym=__main_stack_size__=0x4400 -lnosys
 
 LIBS=
 
@@ -437,16 +442,27 @@ OBJDIR=./obj
 ALLSOURCES      := $(CSOURCES) $(CPPSOURCES)
 VPATH  := $(sort  $(dir $(ALLSOURCES)))
 
+ASMOBJECTS    := $(addprefix $(OBJDIR)/, $(notdir $(ASMSOURCES:.s=.o)))
 COBJECTS    := $(addprefix $(OBJDIR)/, $(notdir $(CSOURCES:.c=.o)))
 CPPOBJECTS  := $(addprefix $(OBJDIR)/, $(notdir $(CPPSOURCES:.cpp=.o)))
 
-OBJECTS = $(COBJECTS) $(CPPOBJECTS)
+OBJECTS = ${ASMOBJECTS} $(COBJECTS) $(CPPOBJECTS) 
 
+AS=arm-none-eabi-gcc
 CC=arm-none-eabi-gcc
 LD=arm-none-eabi-g++
 CPPC=arm-none-eabi-g++
 
 all:	${OBJDIR}/$(PROJECT).bin
+
+$(ASMOBJECTS) : $(OBJDIR)/%.o : %.s
+ifeq ($(verbose),1)
+	@echo
+	$(AS)  $(ASFLAGS) $(INCS) $(DEFINES) $< -o $@
+else
+	@echo Compiling $(<F)
+	@$(AS) -c $(ASFLAGS) $< -o $@
+endif
 
 $(COBJECTS) : $(OBJDIR)/%.o : %.c
 ifeq ($(verbose),1)
@@ -476,5 +492,11 @@ clean:
 	rm -rf obj/*
 
 test:
-	echo $(CPPOBJECTS)
+	echo $(ASMSOURCES)
+
+keil.symbols:firmware_keil.map convert_keil.pl
+	cat firmware_keil.map | ./convert_keil.pl | sort  > keil.symbols
+
+gcc.symbols: obj/firmware.map convert_gcc.pl
+	cat obj/firmware.map | ./convert_gcc.pl | sort > gcc.symbols
 

@@ -15,6 +15,9 @@
 #define APP_START_ADDRESS   0x8000u
 
 int __dso_handle;
+extern "C" void _fini(void)
+{
+}
 
 void soft_delay_ms(uint32_t ms)
 {
