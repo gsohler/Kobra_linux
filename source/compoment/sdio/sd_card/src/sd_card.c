@@ -1210,7 +1210,7 @@ static en_result_t DmaSdiocTxConfig(M4_DMA_TypeDef* DMAx,
         DMA_ClearIrqFlag(DMAx, enCh, BlkTrnCpltIrq);
 
         /* Enable peripheral circuit trigger function. */
-        PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
+        PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
 
         /* Set DMA trigger source. */
         DMA_SetTriggerSrc(DMAx, enCh, enEvtSrc);
@@ -1283,7 +1283,7 @@ static en_result_t DmaSdiocRxConfig(M4_DMA_TypeDef* DMAx,
         DMA_ClearIrqFlag(DMAx, enCh, BlkTrnCpltIrq);
 
         /* Enable peripheral circuit trigger function. */
-        PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
+        PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
 
         /* Set DMA trigger source. */
         DMA_SetTriggerSrc(DMAx, enCh, enEvtSrc);
