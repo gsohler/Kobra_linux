@@ -368,6 +368,7 @@ bool timer42_irq_get()
 bool timer42_set_compare(const uint16_t compare)
 {
     TIMER4_CNT_SetCycleVal(M4_TMR42, compare);
+    return 0;
 }
 
 uint16_t timer42_get_count()

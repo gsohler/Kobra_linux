@@ -34,6 +34,7 @@ extern "C"{
 #endif // __cplusplus
 
 
+int32_t random(int32_t min, int32_t max);
 
 
 #ifdef __cplusplus

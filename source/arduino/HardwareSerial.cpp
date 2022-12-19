@@ -133,4 +133,5 @@ int HardwareSerial::peek(void)
 //	} else {
 //		return rx_buffer_storage_[tail-rx_buffer_size_];
 //	}
+	return 0;
 }

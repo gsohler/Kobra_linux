@@ -69,6 +69,8 @@ en_result_t timer_set_compare(const uint8_t timer_num,const uint16_t compare)
 
             break;
     }
+    return Ok;
+
 }
 
 uint16_t timer_get_count(const uint8_t timer_num)
